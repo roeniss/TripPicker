@@ -16,3 +16,9 @@
 | 김미성 | Data-Scientist | 데이터 분석, 시각화                 | [seomi9516](https://github.com/seomi9516)         | [바로가기](./김미성) |
 | 메르베 | Data-Scientist | 데이터 기반 BM 설계, 분석           | [mrvagdg](https://github.com/mrvagdg)             | [바로가기](./메르베) |
 | 김예지 | M.L. Expert    | 딥러닝 모듈(프라이버시 블러링) 구현 | [Ye-Ji-Kim](https://github.com/Ye-Ji-Kim)         | [바로가기](./김예지) |
+
+### 깃헙 psp 업데이트 방법 튜토리얼 영상
+
+[링크](https://drive.google.com/file/d/1BdGAHivq3SBqIByPGXli2JXT9iPus7Sj/view?usp=sharing)
+
+비밀번호는 문성혁 팀원이 보유하고 있습니다.
