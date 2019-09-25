@@ -8,4 +8,5 @@
 
 ### 파일 세부정보\*
 
-1. UseCase_Diagram_V1.png
+1. UseCase_Diagram_V1.pptx
+2. UseCase_Diagram_V1.png (위와 같은 내용)
