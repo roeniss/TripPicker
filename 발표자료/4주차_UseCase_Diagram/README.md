@@ -10,3 +10,4 @@
 
 1. UseCase_Diagram_V1.pptx
 2. UseCase_Diagram_V1.png (위와 같은 내용)
+3. UseCase_Diagram_V2_with_outline.pptx
