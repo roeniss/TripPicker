@@ -4,7 +4,7 @@
 
 ## 상세설명
 
-1팀이 9에 제작한 UseCase_Diagram(Ver.1)입니다.
+1팀이 9에 제작한 UseCase_Diagram(Ver.2)입니다.
 
 ### 파일 세부정보\*
 
