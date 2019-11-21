@@ -2,9 +2,7 @@
 
 ## 프로젝트 소개
 
-문화체육관광부 시스템 인프라 구축사업 가상 시나리오를 바탕으로, **지역기반 한국형 여행 SNS 및 데이터 인프라 구축** 사업을 제안하였습니다.
-
-![project introduction](image_storage/project_introduction.png)
+여행지 추천 시스템을 개발합니다.
 
 ## 레포지토리 소개
 
