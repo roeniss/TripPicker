@@ -1,7 +1,8 @@
 package com.picker.trip.api;
 
+import com.picker.trip.domain.User;
+import com.picker.trip.domain.UserPreference;
 import com.picker.trip.model.DefaultRes;
-import com.picker.trip.model.SignUpReq;
 import com.picker.trip.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -24,20 +25,30 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/users")
-    public ResponseEntity<DefaultRes> signUp(@RequestBody final SignUpReq signUpReq) {
+    @PostMapping("/users/signup")
+    public ResponseEntity<DefaultRes> signup(@RequestBody final User user) {
         try {
-            return new ResponseEntity<>(userService.saveUser(signUpReq), HttpStatus.OK);
+            return new ResponseEntity<>(userService.saveUser(user), HttpStatus.OK);
         } catch (Exception e) {
             log.error(e.getMessage());
             return new ResponseEntity<>(FAIL_DEFAULT_RES, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @GetMapping("/users/email/check")
+    @GetMapping("/users/check")
     public ResponseEntity<DefaultRes> checkEmail(@RequestParam("email") final String email) {
         try {
             return new ResponseEntity<>(userService.validateEmail(email), HttpStatus.OK);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(FAIL_DEFAULT_RES, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/users/preferences")
+    public ResponseEntity<DefaultRes> saveUserPreference(@RequestBody final UserPreference userPreference) {
+        try {
+            return new ResponseEntity<>(userService.saveUserPreference(userPreference), HttpStatus.OK);
         } catch (Exception e) {
             log.error(e.getMessage());
             return new ResponseEntity<>(FAIL_DEFAULT_RES, HttpStatus.INTERNAL_SERVER_ERROR);

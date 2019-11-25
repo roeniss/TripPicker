@@ -2,11 +2,10 @@ package com.picker.trip.service;
 
 
 import com.picker.trip.domain.User;
-import com.picker.trip.domain.UserCharacter;
+import com.picker.trip.domain.UserPreference;
 import com.picker.trip.model.DefaultRes;
-import com.picker.trip.model.SignUpReq;
 import com.picker.trip.model.UserRes;
-import com.picker.trip.repository.UserCharacterRepository;
+import com.picker.trip.repository.UserPreferenceRepository;
 import com.picker.trip.repository.UserRepository;
 import com.picker.trip.utils.AES256Util;
 import com.picker.trip.utils.StatusCode;
@@ -26,12 +25,12 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final UserCharacterRepository userCharacterRepository;
+    private final UserPreferenceRepository userPreferenceRepository;
 
     public UserService(final UserRepository userRepository,
-                       final UserCharacterRepository userCharacterRepository) {
+                       final UserPreferenceRepository userPreferenceRepository) {
         this.userRepository = userRepository;
-        this.userCharacterRepository = userCharacterRepository;
+        this.userPreferenceRepository = userPreferenceRepository;
     }
 
     /**
@@ -56,10 +55,10 @@ public class UserService {
         final List<UserRes> userResList = new ArrayList<>();
 
         for (User user: users) {
-            if(userCharacterRepository.findByUserIdx(user.getUserIdx()).isPresent()){
+            if(userPreferenceRepository.findByUserIdx(user.getUserIdx()).isPresent()){
                 UserRes userRes = new UserRes();
                 userRes.setUser(user);
-                userRes.setUserCharacter(userCharacterRepository.findByUserIdx(user.getUserIdx()).get());
+                userRes.setUserPreference(userPreferenceRepository.findByUserIdx(user.getUserIdx()).get());
                 userResList.add(userRes);
             }
         }
@@ -70,21 +69,15 @@ public class UserService {
      * 회원 정보 저장
      * @return
      */
-    public DefaultRes saveUser(final SignUpReq signUpReq){
+    public DefaultRes saveUser(final User user){
         try {
-            User user = signUpReq.getUser();
-            UserCharacter userCharacter = signUpReq.getUserCharacter();
-
             AES256Util aes256Util = new AES256Util("SINSUDONG-SERVER-ENCRYPT");
             user.setPassword(aes256Util.encrypt(user.getPassword()));
             userRepository.save(user);
-
-            userCharacter.setUserIdx(user.getUserIdx());
-            userCharacterRepository.save(userCharacter);
             return DefaultRes.res(StatusCode.CREATED, "회원 가입 완료");
         } catch (Exception e) {
             System.out.println(e);
-            return DefaultRes.res(StatusCode.DB_ERROR, "데이터베이스 에러");
+            return DefaultRes.res(StatusCode.DB_ERROR, "회원 가입 실패");
         }
     }
 
@@ -95,6 +88,20 @@ public class UserService {
      */
     public DefaultRes validateEmail(final String email) {
         Optional<User> user = userRepository.findByEmail(email);
-        return user.map(value -> DefaultRes.res(StatusCode.BAD_REQUEST, "중복된 이메일입니다.")).orElseGet(() -> DefaultRes.res(StatusCode.OK, "사용 가능 합니다."));
+        return user.map(value -> DefaultRes.res(StatusCode.NO_CONTENT, "중복된 이메일입니다.")).orElseGet(() -> DefaultRes.res(StatusCode.OK, "사용 가능 합니다."));
+    }
+
+    /**
+     * 회원 선호 정보 저장
+     * @return
+     */
+    public DefaultRes saveUserPreference(final UserPreference userPreference){
+        try {
+            userPreferenceRepository.save(userPreference);
+            return DefaultRes.res(StatusCode.CREATED, "회원 선호 정보 저장 성공");
+        } catch (Exception e) {
+            System.out.println(e);
+            return DefaultRes.res(StatusCode.DB_ERROR, "회원 선호 정보 저장 실패");
+        }
     }
 }
