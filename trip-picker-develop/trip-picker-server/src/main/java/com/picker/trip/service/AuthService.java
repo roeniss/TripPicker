@@ -28,15 +28,16 @@ public class AuthService {
             Optional<User> user = userRepository.findByEmailAndPassword(loginReq.getEmail(),
                     aes256Util.encrypt(loginReq.getPassword()));
             LoginRes loginRes = new LoginRes();
+            loginRes.setUserIdx(user.get().getUserIdx());
+            loginRes.setUserName(user.get().getName());
             if(user.isPresent()) {
                 loginRes.setToken(jwtService.create(user.get().getUserIdx()));
-                loginRes.setName(user.get().getName());
-                return DefaultRes.res(StatusCode.CREATED, "로그인 성공", loginRes);
+                return DefaultRes.res(StatusCode.OK, "로그인 성공", loginRes);
             }
-            return DefaultRes.res(StatusCode.UNAUTHORIZED, "로그인 실패");
+            return DefaultRes.res(StatusCode.NOT_FOUND, "로그인 실패");
         }
         catch(Exception e){
-            return DefaultRes.res(StatusCode.UNAUTHORIZED, "로그인 실패");
+            return DefaultRes.res(StatusCode.NOT_FOUND, "로그인 실패");
         }
     }
 
