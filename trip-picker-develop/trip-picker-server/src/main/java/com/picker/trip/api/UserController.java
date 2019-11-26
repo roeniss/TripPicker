@@ -5,6 +5,7 @@ import com.picker.trip.domain.UserLocation;
 import com.picker.trip.domain.UserPersonality;
 import com.picker.trip.domain.UserPreference;
 import com.picker.trip.model.DefaultRes;
+import com.picker.trip.model.UserPreferenceReq;
 import com.picker.trip.service.TourApiService;
 import com.picker.trip.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -52,9 +53,9 @@ public class UserController {
     }
 
     @PostMapping("/users/preferences")
-    public ResponseEntity<DefaultRes> saveUserPreference(@RequestBody final UserPreference userPreference) {
+    public ResponseEntity<DefaultRes> saveUserPreference(@RequestBody final UserPreferenceReq userPreferenceReq) {
         try {
-            return new ResponseEntity<>(userService.saveUserPreference(userPreference), HttpStatus.OK);
+            return new ResponseEntity<>(userService.saveUserPreference(userPreferenceReq), HttpStatus.OK);
         } catch (Exception e) {
             log.error(e.getMessage());
             return new ResponseEntity<>(FAIL_DEFAULT_RES, HttpStatus.INTERNAL_SERVER_ERROR);

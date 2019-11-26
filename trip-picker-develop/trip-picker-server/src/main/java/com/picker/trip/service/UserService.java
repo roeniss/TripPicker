@@ -1,16 +1,11 @@
 package com.picker.trip.service;
 
 
-import com.picker.trip.domain.User;
-import com.picker.trip.domain.UserLocation;
-import com.picker.trip.domain.UserPersonality;
-import com.picker.trip.domain.UserPreference;
-import com.picker.trip.model.DefaultRes;
-import com.picker.trip.model.UserRes;
-import com.picker.trip.repository.UserLocationRepository;
-import com.picker.trip.repository.UserPersonalityRepository;
-import com.picker.trip.repository.UserPreferenceRepository;
-import com.picker.trip.repository.UserRepository;
+import com.picker.trip.domain.*;
+import com.picker.trip.model.*;
+import com.picker.trip.model.enums.ActivityType;
+import com.picker.trip.model.enums.PartnerType;
+import com.picker.trip.repository.*;
 import com.picker.trip.utils.AES256Util;
 import com.picker.trip.utils.StatusCode;
 import lombok.extern.slf4j.Slf4j;
@@ -30,15 +25,21 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserPreferenceRepository userPreferenceRepository;
+    private final UserPreferencePartnerRepository userPreferencePartnerRepository;
+    private final UserPreferenceActivityRepository userPreferenceActivityRepository;
     private final UserPersonalityRepository userPersonalityRepository;
     private final UserLocationRepository userLocationRepository;
 
     public UserService(final UserRepository userRepository,
                        final UserPreferenceRepository userPreferenceRepository,
+                       final UserPreferencePartnerRepository userPreferencePartnerRepository,
+                       final UserPreferenceActivityRepository userPreferenceActivityRepository,
                        final UserPersonalityRepository userPersonalityRepository,
                        final UserLocationRepository userLocationRepository) {
         this.userRepository = userRepository;
         this.userPreferenceRepository = userPreferenceRepository;
+        this.userPreferencePartnerRepository = userPreferencePartnerRepository;
+        this.userPreferenceActivityRepository = userPreferenceActivityRepository;
         this.userPersonalityRepository = userPersonalityRepository;
         this.userLocationRepository = userLocationRepository;
     }
@@ -105,9 +106,48 @@ public class UserService {
      * 회원 선호 정보 저장
      * @return
      */
-    public DefaultRes saveUserPreference(final UserPreference userPreference){
+    public DefaultRes saveUserPreference(final UserPreferenceReq userPreferenceReq){
         try {
-            userPreferenceRepository.save(userPreference);
+            UserPreferenceModel userPreference = userPreferenceReq.getUserPreferenceModel();
+            List<Integer> partnerTypeList = userPreferenceReq.getPartnerTypeList();
+            List<Integer> activityTypeList = userPreferenceReq.getActivityTypeList();
+
+            DataModelReq dataModelReq = new DataModelReq();
+
+            dataModelReq.setSex(userPreference.getSexType().getValue());
+            dataModelReq.setAge(userPreference.getAgeType().getValue());
+            dataModelReq.setMarriage(userPreference.getMarriageType().getValue());
+            dataModelReq.setOneday(userPreference.getNightType().getValue());
+            dataModelReq.setMonth(userPreference.getMonthType());
+            dataModelReq.setPurpose(1);
+            dataModelReq.setBuddy_yes(userPreference.getAccompanyType().getValue());
+            dataModelReq.setAccompany_num(userPreference.getAccompanyNum());
+            dataModelReq.setPay(userPreference.getCostType().getValue());
+
+            List<Integer> accompanyRelationList = new ArrayList<>();
+            for(int i = 0; i < partnerTypeList.size(); i++){
+                int accompanyRelation = partnerTypeList.get(i);
+                accompanyRelationList.add(accompanyRelation);
+            }
+            dataModelReq.setAccompany_relation(accompanyRelationList);
+
+            List<Integer> activityList = new ArrayList<>();
+            for(int i = 0; i < activityTypeList.size(); i++){
+                int activity  = activityTypeList.get(i);
+                activityList.add(activity);
+            }
+            dataModelReq.setActivity(activityList);
+
+            // API 호출
+
+            UserPreference p = new UserPreference();
+            p.setUserIdx(1);
+            p.setAreaCode(1);
+            p.setSggCode(2);
+            p.setRegionName("서울 강동구");
+
+            userPreferenceRepository.save(p);
+
             return DefaultRes.res(StatusCode.CREATED, "회원 선호 정보 저장 성공");
         } catch (Exception e) {
             System.out.println(e);
@@ -153,29 +193,30 @@ public class UserService {
                 .orElseGet(() -> DefaultRes.res(StatusCode.NOT_FOUND, "회원 퍼스널리티를 찾을 수 없습니다."));
     }
 
+
     /**
-     * 회원 추천 지역 저장
+     * 회원 선택 지역 저장
      * @return
      */
     public DefaultRes saveUserLocation(final UserLocation userLocation){
         try {
             userLocationRepository.save(userLocation);
-            return DefaultRes.res(StatusCode.CREATED, "회원 추천 지역 저장 성공");
+            return DefaultRes.res(StatusCode.CREATED, "회원 선택 지역 저장 성공");
         } catch (Exception e) {
             System.out.println(e);
-            return DefaultRes.res(StatusCode.DB_ERROR, "회원 추천 지역 저장 실패");
+            return DefaultRes.res(StatusCode.DB_ERROR, "회원 선택 지역 저장 실패");
         }
     }
 
     /**
-     * 회원 추천 지역 조회
+     * 회원 선택 지역 조회
      * @param userIdx
      * @return
      */
     public DefaultRes<UserLocation> findUserLocationByUserIdx(final int userIdx) {
         final Optional <UserLocation> userLocation =
                 userLocationRepository.findByUserIdx(userIdx);
-        return userLocation.map(value -> DefaultRes.res(StatusCode.OK, "회원 추천 지역 조회 성공", value))
-                .orElseGet(() -> DefaultRes.res(StatusCode.NOT_FOUND, "회원 추천 지역을 찾을 수 없습니다."));
+        return userLocation.map(value -> DefaultRes.res(StatusCode.OK, "회원 선택 지역 조회 성공", value))
+                .orElseGet(() -> DefaultRes.res(StatusCode.NOT_FOUND, "회원 선택 지역을 찾을 수 없습니다."));
     }
 }
