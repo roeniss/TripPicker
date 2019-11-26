@@ -13,15 +13,9 @@ const Register = () => {
 
   const onSubmitHandler = e => {
     e.preventDefault();
-    console.log(email, passwordConfirm, password, name);
     if (!email || !password || !passwordConfirm || !name) return alert("입력하지 않은 항목이 있습니다");
     if (password !== passwordConfirm) return alert("비밀번호와 비밀번호 확인이 일치하지 않습니다");
-    axios("register", dispatch, { email, password, name });
-  };
-
-  const onClickHandler = e => {
-    e.preventDefault();
-    dispatch({ type: "GOTO_LOGIN" });
+    axios("REGISTER", dispatch, { email, password, name });
   };
 
   return (
@@ -71,7 +65,7 @@ const Register = () => {
         </div> */}
         <button>회원가입</button>
       </form>
-      <button onClick={onClickHandler}>로그인 화면으로 돌아가기</button>
+      <button onClick={_ => dispatch({ type: "GOTO_LOGIN" })}>로그인 화면으로 돌아가기</button>
     </div>
   );
 };

@@ -5,13 +5,15 @@ import { Map } from "immutable";
 
 const initialState = Map({
   loading: false,
-  id: 12, // 임시. 원래는 undefined
+  id: 3, // 임시. 원래는 undefined
   error: "",
   page: "login",
-  region: ""
+  region: "서울 마포구", // 임시. 원래는 undefined
+  personality: undefined
 });
 
 const reducer = (state, action) => {
+  console.log(state, action);
   switch (action.type) {
     case "LOGIN_TRY":
       return state
@@ -25,7 +27,6 @@ const reducer = (state, action) => {
         .set("error", undefined);
     case "LOGIN_FAIL":
       return state.set("loading", false).set("error", "로그인에 실패했습니다.");
-
     case "REGISTER_SUCCESS":
       return state
         .set("loading", false)
@@ -33,6 +34,11 @@ const reducer = (state, action) => {
         .set("error", "회원가입에 성공했습니다. 로그인 해 주세요.");
     case "REGISTER_FAIL":
       return state.set("loading", false).set("error", action.payload);
+
+    case "UPDATE_REGION":
+      return state.set("region", action.payload);
+    case "UPDATE_PERSONALITY":
+      return state.set("personality", action.payload);
 
     case "GOTO_REGISTER":
       return state.set("page", "register");
