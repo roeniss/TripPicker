@@ -9,10 +9,15 @@ const Login = () => {
 
   const dispatch = useContext(DispatchContext);
 
+  const onSubmitHandler = e => {
+    e.preventDefault();
+    axios("LOGIN", dispatch, { email, password });
+  };
+
   return (
     <div>
       <h1>로그인 (Login) </h1>
-      <form onSubmit={e => axios("LOGIN", dispatch, { email, password })}>
+      <form onSubmit={onSubmitHandler}>
         <div>
           <label htmlFor="email">이메일</label>
           <input type="text" {...emailBind} />

@@ -25,7 +25,7 @@ const getUrl = subject => {
   }
 };
 
-const login = (dispatch, data) => {
+const login = async (dispatch, data) => {
   dispatch({ type: "LOGIN_TRY" });
   Axios.post(getUrl("LOGIN"), data)
     .then(({ data }) => {

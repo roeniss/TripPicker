@@ -5,10 +5,10 @@ import { Map } from "immutable";
 
 const initialState = Map({
   loading: false,
-  id: 3, // 임시. 원래는 undefined
+  id: undefined, // 임시. 원래는 undefined
   error: "",
   page: "login",
-  region: "서울 마포구", // 임시. 원래는 undefined
+  region: undefined, // 임시. 원래는 undefined
   personality: undefined
 });
 
@@ -39,6 +39,11 @@ const reducer = (state, action) => {
       return state.set("region", action.payload);
     case "UPDATE_PERSONALITY":
       return state.set("personality", action.payload);
+
+    case "CLEAR_REGION":
+      return state.set("region", undefined);
+    case "CLEAR_PERSONALITY":
+      return state.set("personality", undefined);
 
     case "GOTO_REGISTER":
       return state.set("page", "register");
