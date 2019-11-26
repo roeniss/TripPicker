@@ -2,9 +2,13 @@ package com.picker.trip.service;
 
 
 import com.picker.trip.domain.User;
+import com.picker.trip.domain.UserLocation;
+import com.picker.trip.domain.UserPersonality;
 import com.picker.trip.domain.UserPreference;
 import com.picker.trip.model.DefaultRes;
 import com.picker.trip.model.UserRes;
+import com.picker.trip.repository.UserLocationRepository;
+import com.picker.trip.repository.UserPersonalityRepository;
 import com.picker.trip.repository.UserPreferenceRepository;
 import com.picker.trip.repository.UserRepository;
 import com.picker.trip.utils.AES256Util;
@@ -26,11 +30,17 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserPreferenceRepository userPreferenceRepository;
+    private final UserPersonalityRepository userPersonalityRepository;
+    private final UserLocationRepository userLocationRepository;
 
     public UserService(final UserRepository userRepository,
-                       final UserPreferenceRepository userPreferenceRepository) {
+                       final UserPreferenceRepository userPreferenceRepository,
+                       final UserPersonalityRepository userPersonalityRepository,
+                       final UserLocationRepository userLocationRepository) {
         this.userRepository = userRepository;
         this.userPreferenceRepository = userPreferenceRepository;
+        this.userPersonalityRepository = userPersonalityRepository;
+        this.userLocationRepository = userLocationRepository;
     }
 
     /**
@@ -102,6 +112,34 @@ public class UserService {
         } catch (Exception e) {
             System.out.println(e);
             return DefaultRes.res(StatusCode.DB_ERROR, "회원 선호 정보 저장 실패");
+        }
+    }
+
+    /**
+     * 회원 퍼스널리티 저장
+     * @return
+     */
+    public DefaultRes saveUserPersonality(final UserPersonality userPersonality){
+        try {
+            userPersonalityRepository.save(userPersonality);
+            return DefaultRes.res(StatusCode.CREATED, "회원 퍼스널리티 저장 성공");
+        } catch (Exception e) {
+            System.out.println(e);
+            return DefaultRes.res(StatusCode.DB_ERROR, "회원 퍼스널리티 저장 실패");
+        }
+    }
+
+    /**
+     * 회원 추천 지역 저장
+     * @return
+     */
+    public DefaultRes saveUserLocation(final UserLocation userLocation){
+        try {
+            userLocationRepository.save(userLocation);
+            return DefaultRes.res(StatusCode.CREATED, "회원 추천 지역 저장 성공");
+        } catch (Exception e) {
+            System.out.println(e);
+            return DefaultRes.res(StatusCode.DB_ERROR, "회원 추천 지역 저장 실패");
         }
     }
 }
