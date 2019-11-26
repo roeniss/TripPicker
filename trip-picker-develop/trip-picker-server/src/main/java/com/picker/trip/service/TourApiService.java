@@ -26,7 +26,7 @@ public class TourApiService {
      * 관광 정보 API 호출
      * @return
      */
-    public DefaultRes<List<TourApiItem>>findAllData(final int areaCode) {
+    public List<TourApiItem>findAllData(final int areaCode) {
         try {
             List<SggCode> sggCodeList = findAreaCode(areaCode);
             for(SggCode sggCode : sggCodeList ){
@@ -104,12 +104,11 @@ public class TourApiService {
                 tourApiItemList.add(tourApiItem);
             }
 
-            return DefaultRes.res(StatusCode.OK, "사용자 정보 조회 완료",
-                    tourApiItemList);
+            return tourApiItemList;
         }
         catch (Exception e){
             System.out.println(e);
-            return DefaultRes.res(StatusCode.OK, "에러");
+            return null;
         }
     }
 

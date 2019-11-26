@@ -116,6 +116,18 @@ public class UserService {
     }
 
     /**
+     * 회원 선호 정보 조회
+     * @param userIdx
+     * @return
+     */
+    public DefaultRes<UserPreference> findUserPreferenceByUserIdx(final int userIdx) {
+        final Optional <UserPreference> userPreference =
+                userPreferenceRepository.findByUserIdx(userIdx);
+        return userPreference.map(value -> DefaultRes.res(StatusCode.OK, "회원 선호 정보 조회 성공", value))
+                .orElseGet(() -> DefaultRes.res(StatusCode.NOT_FOUND, "회원 선호 정보를 찾을 수 없습니다."));
+    }
+
+    /**
      * 회원 퍼스널리티 저장
      * @return
      */
@@ -130,6 +142,18 @@ public class UserService {
     }
 
     /**
+     * 회원 퍼스널리티 조회
+     * @param userIdx
+     * @return
+     */
+    public DefaultRes<UserPersonality> findUserPersonalityByUserIdx(final int userIdx) {
+        final Optional <UserPersonality> userPersonality =
+                userPersonalityRepository.findByUserIdx(userIdx);
+        return userPersonality.map(value -> DefaultRes.res(StatusCode.OK, "회원 퍼스널리티 조회 성공", value))
+                .orElseGet(() -> DefaultRes.res(StatusCode.NOT_FOUND, "회원 퍼스널리티를 찾을 수 없습니다."));
+    }
+
+    /**
      * 회원 추천 지역 저장
      * @return
      */
@@ -141,5 +165,17 @@ public class UserService {
             System.out.println(e);
             return DefaultRes.res(StatusCode.DB_ERROR, "회원 추천 지역 저장 실패");
         }
+    }
+
+    /**
+     * 회원 추천 지역 조회
+     * @param userIdx
+     * @return
+     */
+    public DefaultRes<UserLocation> findUserLocationByUserIdx(final int userIdx) {
+        final Optional <UserLocation> userLocation =
+                userLocationRepository.findByUserIdx(userIdx);
+        return userLocation.map(value -> DefaultRes.res(StatusCode.OK, "회원 추천 지역 조회 성공", value))
+                .orElseGet(() -> DefaultRes.res(StatusCode.NOT_FOUND, "회원 추천 지역을 찾을 수 없습니다."));
     }
 }
