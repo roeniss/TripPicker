@@ -7,7 +7,7 @@ const RegionSelectForm = () => {
   const [oneday, onedayBind] = useInputState("");
   const [month, monthBind] = useInputState("");
   const [purpose, _] = useInputState(1);
-  const [has_accompany, has_accompanyBind] = useInputState(""); // TODO: 이 부분 변수명이 문서에 안적혀있음. 미성님께 변수명 확인하고 정정.
+  const [accompany_presence, accompany_presenceBind] = useInputState(""); // TODO: 이 부분 변수명이 문서에 안적혀있음. 미성님께 변수명 확인하고 정정.
   const [accompany_num, accompany_numBind] = useInputState("");
   const [accompany_relation, setAccompany_relation] = useState(["0"]);
   const [pay, payBind] = useInputState("");
@@ -20,20 +20,20 @@ const RegionSelectForm = () => {
 
   const onSubmitHandler = e => {
     e.preventDefault();
-    if (!oneday || !month || !purpose || !has_accompany || !accompany_num || !pay || !sex || !age || !marriage) return alert("입력하지 않은 항목이 있습니다"); // accompany_relation, activity 는 체크 안함
+    if (!oneday || !month || !purpose || !accompany_presence || !accompany_num || !pay || !sex || !age || !marriage) return alert("입력하지 않은 항목이 있습니다"); // accompany_relation, activity 는 체크 안함
 
     const converted_accompany_relation = [0, 0, 0, 0, 0, 0]; // 미성님 모델에 넣을 수 있도록 convert
     accompany_relation.forEach(each => (converted_accompany_relation[Number(each)] = 1));
     const converted_activity = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // 도합 20개
     activity.forEach(each => (converted_activity[Number(each)] = 1));
 
-    console.log(oneday, month, purpose, has_accompany, accompany_num, converted_accompany_relation, pay, converted_activity, sex, age, marriage); // TODO: Number로 변환해줘야될듯...
+    console.log(oneday, month, purpose, accompany_presence, accompany_num, converted_accompany_relation, pay, converted_activity, sex, age, marriage); // TODO: Number로 변환해줘야될듯...
 
     const fullData = {
       oneday: Number(oneday),
       month: Number(month),
       purpose: Number(purpose),
-      has_accompany: Number(has_accompany),
+      accompany_presence: Number(accompany_presence),
       accompany_num: Number(accompany_num),
       accompany_relation: converted_accompany_relation,
       pay: Number(pay),
@@ -81,8 +81,8 @@ const RegionSelectForm = () => {
           <input type="text" {...purposeBind} />
         </div> */}
         <div>
-          <label htmlFor="has_accompany"></label>동행자 있음(1)/동행자 없음(2)
-          <input type="text" {...has_accompanyBind} />
+          <label htmlFor="accompany_presence"></label>동행자 있음(1)/동행자 없음(2)
+          <input type="text" {...accompany_presenceBind} />
         </div>
         <div>
           <label htmlFor="accompany_num"></label>동행자 수(숫자만, 자신 제외)
