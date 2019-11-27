@@ -5,6 +5,7 @@ import com.picker.trip.domain.UserLocation;
 import com.picker.trip.domain.UserPersonality;
 import com.picker.trip.domain.UserPreference;
 import com.picker.trip.model.DefaultRes;
+import com.picker.trip.model.UserPreferenceReq;
 import com.picker.trip.service.TourApiService;
 import com.picker.trip.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -61,6 +62,16 @@ public class UserController {
         }
     }
 
+    @GetMapping("/users/preferences/{userIdx}")
+    public ResponseEntity<DefaultRes> getUserPreference(@PathVariable("userIdx") final int userIdx) {
+        try {
+            return new ResponseEntity<>(userService.findUserPreferenceByUserIdx(userIdx), HttpStatus.OK);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(FAIL_DEFAULT_RES, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PostMapping("/users/personalities")
     public ResponseEntity<DefaultRes> saveUserPersonality(@RequestBody final UserPersonality userPersonality) {
         try {
@@ -71,10 +82,29 @@ public class UserController {
         }
     }
 
+    @GetMapping("/users/personalities/{userIdx}")
+    public ResponseEntity<DefaultRes> getUserPersonality(@PathVariable("userIdx") final int userIdx) {
+        try {
+            return new ResponseEntity<>(userService.findUserPersonalityByUserIdx(userIdx), HttpStatus.OK);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(FAIL_DEFAULT_RES, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PostMapping("/users/locations")
     public ResponseEntity<DefaultRes> saveUserLocation(@RequestBody final UserLocation userLocation) {
         try {
             return new ResponseEntity<>(userService.saveUserLocation(userLocation), HttpStatus.OK);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(FAIL_DEFAULT_RES, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @GetMapping("/users/locations/{userIdx}")
+    public ResponseEntity<DefaultRes> getUserLocation(@PathVariable("userIdx") final int userIdx) {
+        try {
+            return new ResponseEntity<>(userService.findUserLocationByUserIdx(userIdx), HttpStatus.OK);
         } catch (Exception e) {
             log.error(e.getMessage());
             return new ResponseEntity<>(FAIL_DEFAULT_RES, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -100,6 +130,7 @@ public class UserController {
             return new ResponseEntity<>(FAIL_DEFAULT_RES, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    /*
     @GetMapping("/test")
     public ResponseEntity<DefaultRes> getAllData() {
         try {
@@ -109,4 +140,5 @@ public class UserController {
             return new ResponseEntity<>(FAIL_DEFAULT_RES, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    */
 }

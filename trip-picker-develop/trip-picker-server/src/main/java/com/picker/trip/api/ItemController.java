@@ -1,6 +1,7 @@
 package com.picker.trip.api;
 
 import com.picker.trip.model.DefaultRes;
+import com.picker.trip.service.ItemService;
 import com.picker.trip.service.TourApiService;
 import com.picker.trip.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -18,21 +19,24 @@ import static com.picker.trip.model.DefaultRes.FAIL_DEFAULT_RES;
 public class ItemController {
     private final UserService userService;
     private final TourApiService tourApiService;
+    private final ItemService itemService;
 
-    public ItemController(final UserService userService, final TourApiService tourApiService) {
+    public ItemController(final UserService userService, final TourApiService tourApiService,
+                          final ItemService itemService) {
         this.userService = userService;
         this.tourApiService = tourApiService;
+        this.itemService = itemService;
     }
 
-    /*
+
     @GetMapping("/items")
     public ResponseEntity<DefaultRes> getAllItems(@PathVariable("userIdx") final int userIdx ) {
         try {
-            return new ResponseEntity<>(userService.validateEmail(email), HttpStatus.OK);
+            return new ResponseEntity<>(itemService.findAllItems(userIdx), HttpStatus.OK);
         } catch (Exception e) {
             log.error(e.getMessage());
             return new ResponseEntity<>(FAIL_DEFAULT_RES, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    */
+
 }

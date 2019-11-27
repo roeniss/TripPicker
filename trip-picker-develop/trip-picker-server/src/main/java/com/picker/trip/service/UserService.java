@@ -1,16 +1,11 @@
 package com.picker.trip.service;
 
 
-import com.picker.trip.domain.User;
-import com.picker.trip.domain.UserLocation;
-import com.picker.trip.domain.UserPersonality;
-import com.picker.trip.domain.UserPreference;
-import com.picker.trip.model.DefaultRes;
-import com.picker.trip.model.UserRes;
-import com.picker.trip.repository.UserLocationRepository;
-import com.picker.trip.repository.UserPersonalityRepository;
-import com.picker.trip.repository.UserPreferenceRepository;
-import com.picker.trip.repository.UserRepository;
+import com.picker.trip.domain.*;
+import com.picker.trip.model.*;
+import com.picker.trip.model.enums.ActivityType;
+import com.picker.trip.model.enums.PartnerType;
+import com.picker.trip.repository.*;
 import com.picker.trip.utils.AES256Util;
 import com.picker.trip.utils.StatusCode;
 import lombok.extern.slf4j.Slf4j;
@@ -116,6 +111,18 @@ public class UserService {
     }
 
     /**
+     * 회원 선호 정보 조회
+     * @param userIdx
+     * @return
+     */
+    public DefaultRes<UserPreference> findUserPreferenceByUserIdx(final int userIdx) {
+        final Optional <UserPreference> userPreference =
+                userPreferenceRepository.findByUserIdx(userIdx);
+        return userPreference.map(value -> DefaultRes.res(StatusCode.OK, "회원 선호 정보 조회 성공", value))
+                .orElseGet(() -> DefaultRes.res(StatusCode.NOT_FOUND, "회원 선호 정보를 찾을 수 없습니다."));
+    }
+
+    /**
      * 회원 퍼스널리티 저장
      * @return
      */
@@ -130,16 +137,41 @@ public class UserService {
     }
 
     /**
-     * 회원 추천 지역 저장
+     * 회원 퍼스널리티 조회
+     * @param userIdx
+     * @return
+     */
+    public DefaultRes<UserPersonality> findUserPersonalityByUserIdx(final int userIdx) {
+        final Optional <UserPersonality> userPersonality =
+                userPersonalityRepository.findByUserIdx(userIdx);
+        return userPersonality.map(value -> DefaultRes.res(StatusCode.OK, "회원 퍼스널리티 조회 성공", value))
+                .orElseGet(() -> DefaultRes.res(StatusCode.NOT_FOUND, "회원 퍼스널리티를 찾을 수 없습니다."));
+    }
+
+
+    /**
+     * 회원 선택 지역 저장
      * @return
      */
     public DefaultRes saveUserLocation(final UserLocation userLocation){
         try {
             userLocationRepository.save(userLocation);
-            return DefaultRes.res(StatusCode.CREATED, "회원 추천 지역 저장 성공");
+            return DefaultRes.res(StatusCode.CREATED, "회원 선택 지역 저장 성공");
         } catch (Exception e) {
             System.out.println(e);
-            return DefaultRes.res(StatusCode.DB_ERROR, "회원 추천 지역 저장 실패");
+            return DefaultRes.res(StatusCode.DB_ERROR, "회원 선택 지역 저장 실패");
         }
+    }
+
+    /**
+     * 회원 선택 지역 조회
+     * @param userIdx
+     * @return
+     */
+    public DefaultRes<UserLocation> findUserLocationByUserIdx(final int userIdx) {
+        final Optional <UserLocation> userLocation =
+                userLocationRepository.findByUserIdx(userIdx);
+        return userLocation.map(value -> DefaultRes.res(StatusCode.OK, "회원 선택 지역 조회 성공", value))
+                .orElseGet(() -> DefaultRes.res(StatusCode.NOT_FOUND, "회원 선택 지역을 찾을 수 없습니다."));
     }
 }
