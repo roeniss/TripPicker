@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class TourApiItem {
-    private int contentId;
+    private int contentIdx;
     private int contentTypeId;
     private String title;
     private String categoryCode;

@@ -130,15 +130,4 @@ public class UserController {
             return new ResponseEntity<>(FAIL_DEFAULT_RES, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    /*
-    @GetMapping("/test")
-    public ResponseEntity<DefaultRes> getAllData() {
-        try {
-            return new ResponseEntity<>(tourApiService.findAllData(1), HttpStatus.OK);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            return new ResponseEntity<>(FAIL_DEFAULT_RES, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-    */
 }

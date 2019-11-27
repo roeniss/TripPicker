@@ -29,7 +29,7 @@ public class ItemController {
     }
 
 
-    @GetMapping("/items")
+    @GetMapping("/items/{userIdx}")
     public ResponseEntity<DefaultRes> getAllItems(@PathVariable("userIdx") final int userIdx ) {
         try {
             return new ResponseEntity<>(itemService.findAllItems(userIdx), HttpStatus.OK);
@@ -38,5 +38,4 @@ public class ItemController {
             return new ResponseEntity<>(FAIL_DEFAULT_RES, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 }

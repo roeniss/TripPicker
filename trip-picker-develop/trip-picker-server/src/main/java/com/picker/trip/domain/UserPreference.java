@@ -16,6 +16,8 @@ public class UserPreference {
     private int userIdx;
 
     private String region;
+    private int areaCode;
+    private int sggCode;
 }
 
 
