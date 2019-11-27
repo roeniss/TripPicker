@@ -53,9 +53,9 @@ public class UserController {
     }
 
     @PostMapping("/users/preferences")
-    public ResponseEntity<DefaultRes> saveUserPreference(@RequestBody final UserPreferenceReq userPreferenceReq) {
+    public ResponseEntity<DefaultRes> saveUserPreference(@RequestBody final UserPreference userPreference) {
         try {
-            return new ResponseEntity<>(userService.saveUserPreference(userPreferenceReq), HttpStatus.OK);
+            return new ResponseEntity<>(userService.saveUserPreference(userPreference), HttpStatus.OK);
         } catch (Exception e) {
             log.error(e.getMessage());
             return new ResponseEntity<>(FAIL_DEFAULT_RES, HttpStatus.INTERNAL_SERVER_ERROR);

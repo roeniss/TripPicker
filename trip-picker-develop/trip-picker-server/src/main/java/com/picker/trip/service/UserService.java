@@ -25,21 +25,15 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserPreferenceRepository userPreferenceRepository;
-    private final UserPreferencePartnerRepository userPreferencePartnerRepository;
-    private final UserPreferenceActivityRepository userPreferenceActivityRepository;
     private final UserPersonalityRepository userPersonalityRepository;
     private final UserLocationRepository userLocationRepository;
 
     public UserService(final UserRepository userRepository,
                        final UserPreferenceRepository userPreferenceRepository,
-                       final UserPreferencePartnerRepository userPreferencePartnerRepository,
-                       final UserPreferenceActivityRepository userPreferenceActivityRepository,
                        final UserPersonalityRepository userPersonalityRepository,
                        final UserLocationRepository userLocationRepository) {
         this.userRepository = userRepository;
         this.userPreferenceRepository = userPreferenceRepository;
-        this.userPreferencePartnerRepository = userPreferencePartnerRepository;
-        this.userPreferenceActivityRepository = userPreferenceActivityRepository;
         this.userPersonalityRepository = userPersonalityRepository;
         this.userLocationRepository = userLocationRepository;
     }
@@ -106,48 +100,9 @@ public class UserService {
      * 회원 선호 정보 저장
      * @return
      */
-    public DefaultRes saveUserPreference(final UserPreferenceReq userPreferenceReq){
+    public DefaultRes saveUserPreference(final UserPreference userPreference){
         try {
-            UserPreferenceModel userPreference = userPreferenceReq.getUserPreferenceModel();
-            List<Integer> partnerTypeList = userPreferenceReq.getPartnerTypeList();
-            List<Integer> activityTypeList = userPreferenceReq.getActivityTypeList();
-
-            DataModelReq dataModelReq = new DataModelReq();
-
-            dataModelReq.setSex(userPreference.getSexType().getValue());
-            dataModelReq.setAge(userPreference.getAgeType().getValue());
-            dataModelReq.setMarriage(userPreference.getMarriageType().getValue());
-            dataModelReq.setOneday(userPreference.getNightType().getValue());
-            dataModelReq.setMonth(userPreference.getMonthType());
-            dataModelReq.setPurpose(1);
-            dataModelReq.setBuddy_yes(userPreference.getAccompanyType().getValue());
-            dataModelReq.setAccompany_num(userPreference.getAccompanyNum());
-            dataModelReq.setPay(userPreference.getCostType().getValue());
-
-            List<Integer> accompanyRelationList = new ArrayList<>();
-            for(int i = 0; i < partnerTypeList.size(); i++){
-                int accompanyRelation = partnerTypeList.get(i);
-                accompanyRelationList.add(accompanyRelation);
-            }
-            dataModelReq.setAccompany_relation(accompanyRelationList);
-
-            List<Integer> activityList = new ArrayList<>();
-            for(int i = 0; i < activityTypeList.size(); i++){
-                int activity  = activityTypeList.get(i);
-                activityList.add(activity);
-            }
-            dataModelReq.setActivity(activityList);
-
-            // API 호출
-
-            UserPreference p = new UserPreference();
-            p.setUserIdx(1);
-            p.setAreaCode(1);
-            p.setSggCode(2);
-            p.setRegionName("서울 강동구");
-
-            userPreferenceRepository.save(p);
-
+            userPreferenceRepository.save(userPreference);
             return DefaultRes.res(StatusCode.CREATED, "회원 선호 정보 저장 성공");
         } catch (Exception e) {
             System.out.println(e);

@@ -13,8 +13,6 @@ public class UserLocation {
     @Id
     private int userIdx;
 
-    private int areaCode;
-    private int sggCode;
-    private String regionName;
+    private String region;
 
 }
