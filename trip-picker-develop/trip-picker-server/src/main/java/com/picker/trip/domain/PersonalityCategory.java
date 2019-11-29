@@ -1,5 +1,6 @@
 package com.picker.trip.domain;
 
+import com.picker.trip.model.enums.CustomCategoryType;
 import com.picker.trip.model.enums.PersonalityType;
 import lombok.Data;
 
@@ -12,7 +13,7 @@ import javax.persistence.Table;
 @Table(name = "personality_category")
 public class PersonalityCategory {
     private PersonalityType personalityType;
-    private String categoryCode;
+    private CustomCategoryType categoryCode;
     private int likesCount;
 
     @Id

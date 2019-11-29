@@ -29,10 +29,11 @@ public class ItemController {
     }
 
 
-    @GetMapping("/items/{userIdx}")
-    public ResponseEntity<DefaultRes> getAllItems(@PathVariable("userIdx") final int userIdx ) {
+    @GetMapping("/items")
+    public ResponseEntity<DefaultRes> getAllItems(@RequestParam("userIdx") final int userIdx,
+                                                  @RequestParam("isSelected") final boolean isSelected ) {
         try {
-            return new ResponseEntity<>(itemService.findAllItems(userIdx), HttpStatus.OK);
+            return new ResponseEntity<>(itemService.findAllItems(userIdx, isSelected), HttpStatus.OK);
         } catch (Exception e) {
             log.error(e.getMessage());
             return new ResponseEntity<>(FAIL_DEFAULT_RES, HttpStatus.INTERNAL_SERVER_ERROR);

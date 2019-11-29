@@ -1,8 +1,8 @@
 package com.picker.trip.api;
 
-import com.picker.trip.domain.ItemLike;
+import com.picker.trip.domain.UserBookmark;
 import com.picker.trip.model.DefaultRes;
-import com.picker.trip.service.LikeService;
+import com.picker.trip.service.BookmarkService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,27 +14,27 @@ import static com.picker.trip.model.DefaultRes.FAIL_DEFAULT_RES;
 
 @Slf4j
 @RestController
-public class LikeController {
-    private final LikeService likeService;
+public class BookmarkController {
+    private final BookmarkService bookmarkService;
 
-    public LikeController(final LikeService likeService) {
-        this.likeService = likeService;
+    public BookmarkController(final BookmarkService bookmarkService) {
+        this.bookmarkService = bookmarkService;
     }
 
-    @PostMapping("/likes")
-    public ResponseEntity<DefaultRes> saveItemLike(@RequestBody final ItemLike itemLike) {
+    @PostMapping("/bookmarks")
+    public ResponseEntity<DefaultRes> saveUserBookmark(@RequestBody final UserBookmark userBookmark) {
         try {
-            return new ResponseEntity<>(likeService.saveItemLike(itemLike), HttpStatus.OK);
+            return new ResponseEntity<>(bookmarkService.saveUserBookmark(userBookmark), HttpStatus.OK);
         } catch (Exception e) {
             log.error(e.getMessage());
             return new ResponseEntity<>(FAIL_DEFAULT_RES, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @PostMapping("/likes/cancel")
-    public ResponseEntity<DefaultRes> cancelItemLike(@RequestBody final ItemLike itemLike) {
+    @PostMapping("/bookmarks/cancel")
+    public ResponseEntity<DefaultRes> cancelUserBookmark(@RequestBody final UserBookmark userBookmark) {
         try {
-            return new ResponseEntity<>(likeService.deleteItemLike(itemLike), HttpStatus.OK);
+            return new ResponseEntity<>(bookmarkService.deleteUserBookmark(userBookmark), HttpStatus.OK);
         } catch (Exception e) {
             log.error(e.getMessage());
             return new ResponseEntity<>(FAIL_DEFAULT_RES, HttpStatus.INTERNAL_SERVER_ERROR);

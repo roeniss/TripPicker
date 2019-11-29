@@ -1,5 +1,6 @@
 package com.picker.trip.domain;
 
+import com.picker.trip.model.enums.CustomCategoryType;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -14,4 +15,6 @@ public class ItemLike {
 
     private int userIdx;
     private int contentIdx;
+    private CustomCategoryType categoryCode;
+    private String subCategoryCode;
 }
