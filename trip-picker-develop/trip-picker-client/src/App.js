@@ -17,6 +17,7 @@ function App() {
     <DispatchContext.Provider value={dispatch}>
       <StateContext.Provider value={state}>
         <div className="App">
+          <h1>Hello</h1>
           {state.get("error") ? <Error /> : null}
           {state.get("id") ? <Home /> : state.get("page") === "register" ? <Register /> : <Login />}
           {/* Below: TEST */}

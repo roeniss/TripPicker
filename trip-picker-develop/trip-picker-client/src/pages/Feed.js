@@ -1,24 +1,26 @@
-import React, { useEffect } from "react";
-import FeedFooter from "./FeedFooter";
-import RefreshButton from "./RefreshButton";
+import React, { useEffect, useContext } from "react";
+// import FeedFooter from "./FeedFooter";
+import ModalButtons from "../modals/ModalButtons";
 import FeedItems from "./FeedItems";
+import { DispatchContext, StateContext } from "../App";
+import { axios } from "../customAxios";
 
 const Feed = () => {
+  const dispatch = useContext(DispatchContext);
+  const state = useContext(StateContext);
+
   useEffect(() => {
-    // axios 로 서버에서 아이템들 모두 소환하여, state에 저장
-    // Feed 컴포넌트가 Main page의 실질적인 Root 디렉토리이기 때문에 여기에서 실행하는 것임
-    // 저장할 값들
-    // 1. 전체 (내 퍼소널리티에 맞는) 아이템들
-    // 2. 내 즐겨찾기 아이템들
-    // 3. 내 좋아요/싫어요 아이템들
+    const data = { userIdx: state.get("id") };
+    axios("GET_FEED", dispatch, data);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <div>
-      <RefreshButton />
+      {state.get("showFavorites") ? <h1>즐겨찾기 목록</h1> : <h1>전체 목록</h1>}
+      <ModalButtons />
       <FeedItems />
-      <FeedFooter />
+      {/* <FeedFooter /> */}
     </div>
   );
 };

@@ -29,11 +29,11 @@ const Register = () => {
         </div>
         <div>
           <label htmlFor="password">password</label>
-          <input type="text" {...passwordBind} />
+          <input type="password" {...passwordBind} />
         </div>
         <div>
           <label htmlFor="passwordConfirm">passwordConfirm</label>
-          <input type="text" {...passwordConfirmBind} />
+          <input type="password" {...passwordConfirmBind} />
         </div>
         <div>
           <label htmlFor="name">name</label>

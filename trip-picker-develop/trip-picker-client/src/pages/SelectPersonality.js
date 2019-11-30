@@ -3,7 +3,7 @@ import { axios } from "../customAxios";
 import { StateContext, DispatchContext } from "../App";
 
 const SelectPersonality = () => {
-  const [personality, setPersonality] = useState("NATURE_PERSONALITY");
+  const [personality, setPersonality] = useState("NATURE_PERSONAL");
   const state = useContext(StateContext);
   const dispatch = useContext(DispatchContext);
 

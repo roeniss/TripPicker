@@ -4,8 +4,8 @@ import useInputState from "../hooks/useInputState";
 import { axios } from "../customAxios";
 
 const Login = () => {
-  const [email, emailBind] = useInputState("lipilman@naver.com"); // TODO: 지워
-  const [password, passwordBind] = useInputState("123456"); // TODO: 지워
+  const [email, emailBind] = useInputState("abcd@mail.com"); // TODO: 지워
+  const [password, passwordBind] = useInputState("1234"); // TODO: 지워
 
   const dispatch = useContext(DispatchContext);
 
