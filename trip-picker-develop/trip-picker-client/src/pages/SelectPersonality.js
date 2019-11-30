@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { axios } from "../customAxios";
 import { StateContext, DispatchContext } from "../App";
+import styled from "styled-components";
 
 const SelectPersonality = () => {
   const [personality, setPersonality] = useState("NATURE_PERSONAL");
@@ -15,7 +16,7 @@ const SelectPersonality = () => {
 
   return (
     <div>
-      <form onSubmit={onSubmitHandler}>
+      <SelectPersonalityForm onSubmit={onSubmitHandler}>
         <select name="personality" id="personality" value={personality} onChange={e => setPersonality(e.target.value)}>
           <option value="NATURE_PERSONAL">자연속의 나</option>
           <option value="EXTREME_PERSONAL">짜릿함</option>
@@ -23,9 +24,29 @@ const SelectPersonality = () => {
           <option value="FAMILY_PERSONAL">가족여행</option>
         </select>
         <button>퍼소널리티 등록</button>
-      </form>
+      </SelectPersonalityForm>
     </div>
   );
 };
 
 export default SelectPersonality;
+
+const SelectPersonalityForm = styled.form`
+  padding-top: 100px;
+
+  select {
+    height: 100px;
+    width: 220px;
+    font-size: 30px;
+  }
+  select:nth-of-type(1) {
+    margin-right: 30px;
+  }
+
+  button {
+    height: 100px;
+    font-size: 30px;
+    border-radius: 10px;
+    background-color: pink;
+  }
+`;

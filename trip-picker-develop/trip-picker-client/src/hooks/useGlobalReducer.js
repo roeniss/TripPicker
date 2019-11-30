@@ -94,7 +94,7 @@ const dummyItems = [
 
 const initialState = Map({
   loading: false,
-  id: undefined, // 임시. 원래는 undefined
+  id: 7, // 임시. 원래는 undefined
   error: "",
   page: "login",
   region: undefined, // 임시. 원래는 undefined
@@ -138,6 +138,8 @@ const reducer = (state, action) => {
     case "GET_FAVORITES":
       // 즐겨찾기 모드 on / off 무관하게 새 정보 받아오는 걸로
       return state.set("favorites", action.payload).set("showFavorites", !action.payload.showFavorites);
+    case "TOGGLE_SHOW_FAVORITES":
+      return state.set("showFavorites", !state.get("showFavorites"));
 
     case "CLEAR_REGION":
       return state.set("region", undefined);

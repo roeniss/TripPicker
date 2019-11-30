@@ -107,8 +107,10 @@ const updateRegion = async (dispatch, data) => {
   dispatch({ type: "UPDATE_REGION", payload: region });
 };
 
-const recommenDRegion = async (dispatch, data) => {
+const recommendRegion = async (dispatch, data) => {
+  // TODO: axios로 파이썬 서버에 보내고 --> 그 지역 코드 리턴 받아서 --> 지역 명 뽑아내고 --> 서버에 저장하고 --> state.get('region') update하기
   // TODO: 미성님 서버에 데이터 보내서 "지역코드" 리턴받기
+
   // const response = Axios.post(getUrl("RECOMMEND_REGION"), data);
   // const regionCode = response.code;
   // const fullRegion = regionInfo[regionCode]["fullRegion"];
@@ -191,7 +193,7 @@ const axios = (action, dispatch, data) => {
     case "UPDATE_REGION":
       return updateRegion(dispatch, data);
     case "RECOMMEND_REGION":
-      return recommenDRegion(dispatch, data);
+      return recommendRegion(dispatch, data);
     case "GET_PERSONALITY":
       return getPersonality(dispatch, data);
     case "UPDATE_PERSONALITY":

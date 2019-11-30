@@ -20,7 +20,6 @@ const Home = () => {
 
   return (
     <div>
-      <h1>메인화면 (Home) </h1>
       {!state.get("region") ? <SelectRegion /> : null} {/* region이 없다면 지역 설정이 최우선과제*/}
       {state.get("region") && !state.get("personality") ? <SelectPersonality /> : null}
       {state.get("region") && state.get("personality") ? <Feed /> : null}

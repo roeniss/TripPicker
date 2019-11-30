@@ -7,6 +7,8 @@ import Register from "./pages/Register";
 
 import useGlobalReducer from "./hooks/useGlobalReducer";
 
+import styled from "styled-components";
+
 export const StateContext = React.createContext();
 export const DispatchContext = React.createContext();
 
@@ -16,16 +18,37 @@ function App() {
   return (
     <DispatchContext.Provider value={dispatch}>
       <StateContext.Provider value={state}>
-        <div className="App">
-          <h1>Hello</h1>
+        <Header>
+          <h1>Trip-Picker</h1>
+          <h5>여행지 선정부터 관광지 추천까지</h5>
+        </Header>
+        <AppContainer className="App">
           {state.get("error") ? <Error /> : null}
           {state.get("id") ? <Home /> : state.get("page") === "register" ? <Register /> : <Login />}
           {/* Below: TEST */}
           {/* <Login /> */}
-        </div>
+        </AppContainer>
       </StateContext.Provider>
     </DispatchContext.Provider>
   );
 }
 
 export default App;
+
+const AppContainer = styled.div`
+  text-align: center;
+  width: 100%;
+  h5 {
+    text-decoration: underline;
+  }
+  padding-bottom: 10px;
+`;
+
+const Header = styled.div`
+  // position: fixed;
+  height: 100px;
+  display: block;
+  text-align: center;
+  width: 100%;
+  border-bottom: 1px solid gray;
+`;

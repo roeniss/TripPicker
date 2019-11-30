@@ -9,7 +9,8 @@ const ModalButtons = () => {
   const dispatch = useContext(DispatchContext);
   const state = useContext(StateContext);
 
-  const refresh = () => {
+  const refresh = e => {
+    e.preventDefault();
     const data = { userIdx: state.get("id") };
     axios("GET_FEED", dispatch, data);
   };
@@ -19,10 +20,10 @@ const ModalButtons = () => {
   };
   return ReactDOM.createPortal(
     <Modal id="refresh-modal">
-      <button onClick={() => refresh()}>refresh</button>
-      <button onClick={_ => dispatch({ type: "CLEAR_REGION" })}>reset region</button>
-      <button onClick={_ => dispatch({ type: "CLEAR_PERSONALITY" })}>reset personality</button>
-      <button onClick={_ => toggleShowFavorites()}>toggle favorites</button>
+      <i className="fas fa-sync-alt fa-3x" onClick={e => refresh(e)}></i>
+      <i className="fas fa-map-marker-alt fa-3x" onClick={_ => dispatch({ type: "CLEAR_REGION" })}></i>
+      <i className="fas  fa-meh-rolling-eyes fa-3x" onClick={_ => dispatch({ type: "CLEAR_PERSONALITY" })}></i>
+      <i className="fas  fa-bookmark fa-3x" onClick={_ => toggleShowFavorites()}></i>
     </Modal>,
     modalElem
   );
@@ -35,6 +36,10 @@ const Modal = styled.div`
   button {
     // height: 40px;
     // width: 100px;
+  }
+  i {
+    cursor: pointer;
+    padding-left: 10px;
   }
 `;
 

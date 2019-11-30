@@ -3,6 +3,8 @@ import { DispatchContext, StateContext } from "../App";
 import styled from "styled-components";
 import { axios } from "../customAxios";
 import Detail from "../modals/Detail";
+import BookmarkIcon from "../components/BookmarkIcon";
+import LikeIcon from "../components/LikeIcon";
 
 const FeedItems = () => {
   const [detail, setDetail] = useState(false);
@@ -15,12 +17,14 @@ const FeedItems = () => {
     e.stopPropagation();
     const { contentIdx } = item;
     const data = { userIdx: state.get("id"), contentIdx };
-    if (e.target.classList.contains("bookmarked")) {
+    if (e.target.classList.contains("fas")) {
       axios("REMOVE_FAVORITE", dispatch, data);
-      e.target.classList.remove("bookmarked");
+      e.target.classList.remove("fas");
+      e.target.classList.add("far");
     } else {
       axios("ADD_FAVORITE", dispatch, data);
-      e.target.classList.add("bookmarked");
+      e.target.classList.add("fas");
+      e.target.classList.remove("far");
     }
   };
 
@@ -29,20 +33,22 @@ const FeedItems = () => {
     e.stopPropagation();
     const { contentIdx, categoryCode, subCategoryCode } = item;
     const data = { userIdx: state.get("id"), contentIdx, categoryCode, subCategoryCode };
-    if (e.target.classList.contains("liked")) {
+    if (e.target.classList.contains("fas")) {
       axios("REMOVE_LIKE", dispatch, data);
-      e.target.classList.remove("liked");
+      e.target.classList.remove("fas");
+      e.target.classList.add("far");
     } else {
       axios("ADD_LIKE", dispatch, data);
-      e.target.classList.add("liked");
+      e.target.classList.add("fas");
+      e.target.classList.remove("far");
     }
   };
 
   const showDetails = (e, targetId) => {
     e.preventDefault();
     e.stopPropagation();
-    const target = state.get("feed").filter(each => each.number === targetId);
-    setDetail(target[0]);
+    // const target = state.get("feed").filter(each => each.contentIdx === targetId);
+    setDetail(targetId);
   };
 
   const closeModal = e => {
@@ -52,7 +58,12 @@ const FeedItems = () => {
   };
 
   const items = () => {
-    if (state.get("feed").length === 0) return <Loading>로딩중...</Loading>;
+    if (state.get("feed").length === 0)
+      return (
+        <Loading>
+          <i className="fas fa-spinner fa-spin fa-10x"></i>
+        </Loading>
+      );
     let data;
     if (state.get("showFavorites")) data = state.get("favorites");
     else data = state.get("feed");
@@ -60,8 +71,10 @@ const FeedItems = () => {
     return data.map(item => (
       // TODO: 렌더링 때부터 (state를 따로 가지고 있길 바라는) 좋아요 데이터와 매칭시켜, like 또는 non-like 표시
       <FlexChild onClick={e => showDetails(e, item.contentIdx)} style={{ backgroundImage: `url(${item.imageUrl})` }} key={item.contentIdx} id={item.contentIdx}>
-        <ToggleFavoriteButton onClick={e => toggleFavorite(e, item)} className={item.bookmarked ? "bookmarked" : null} /> {/* TODO: 어떤 값으로 즐겨찾기를 보관하는지 확인 */}
-        <ToggleLikeButton onClick={e => toggleLike(e, item)} className={item.liked ? "liked" : null} /> {/* TODO: 어떤 값으로 즐겨찾기를 보관하는지 확인 */}
+        {/* <ToggleFavoriteButton o /> */}
+        <BookmarkIcon handler={e => toggleFavorite(e, item)} clicked={item.bookmarked ? true : false} />
+        {/* <ToggleLikeButton  /> */}
+        <LikeIcon handler={e => toggleLike(e, item)} clicked={item.liked ? true : false} />
       </FlexChild>
     ));
   };
@@ -84,36 +97,13 @@ const FlexParent = styled.div`
 `;
 const FlexChild = styled.div`
   position: relative;
-  width: 100px;
-  height: 100px;
+  width: 200px;
+  height: 200px;
   margin: 10px;
-  border: 1px red solid;
+  // border: 1px red solid;
   text-align: center;
   background-size: cover;
-`;
-const ToggleFavoriteButton = styled.div`
-  position:absolute;
-  height:20px;
-  width:20px;
-  border:1px red solid;
-  background-color:yellow
-  top:10px;
-  left:10px;
-  &.bookmarked{
-    background-color:red;
-  }
-`;
-const ToggleLikeButton = styled.div`
-  position:absolute;
-  height:20px;
-  width:20px;
-  border:1px red solid;
-  background-color:blue
-  bottom:10px;
-  left:10px
-  &.liked{
-    background-color:green
-  }
+  border-radius: 10px;
 `;
 
 const Loading = styled.div`
@@ -121,5 +111,6 @@ const Loading = styled.div`
   width: 500px;
   margin: 0 auto;
   text-align: center;
+  padding-top: 270px;
 `;
 export default FeedItems;

@@ -1,5 +1,4 @@
 import React, { useEffect, useContext } from "react";
-// import FeedFooter from "./FeedFooter";
 import ModalButtons from "../modals/ModalButtons";
 import FeedItems from "./FeedItems";
 import { DispatchContext, StateContext } from "../App";
@@ -15,12 +14,13 @@ const Feed = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  console.log(state.get("showFavorites"));
+
   return (
     <div>
-      {state.get("showFavorites") ? <h1>즐겨찾기 목록</h1> : <h1>전체 목록</h1>}
+      {state.get("showFavorites") ? <h1>즐겨찾기 리스트</h1> : <h1>당신을 위한 관광 픽업 리스트</h1>}
       <ModalButtons />
       <FeedItems />
-      {/* <FeedFooter /> */}
     </div>
   );
 };
