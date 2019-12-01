@@ -17,6 +17,7 @@ const SelectPersonality = () => {
   return (
     <div>
       <SelectPersonalityForm onSubmit={onSubmitHandler}>
+        <h1>회원님의 {"<퍼스널리티>"}를 선택해 주세요</h1>
         <select name="personality" id="personality" value={personality} onChange={e => setPersonality(e.target.value)}>
           <option value="NATURE_PERSONAL">자연속의 나</option>
           <option value="EXTREME_PERSONAL">짜릿함</option>

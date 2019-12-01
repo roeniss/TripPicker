@@ -44,11 +44,11 @@ const FeedItems = () => {
     }
   };
 
-  const showDetails = (e, targetId) => {
+  const showDetails = (e, contentIdx) => {
+    window.scrollTo(0, 0);
     e.preventDefault();
     e.stopPropagation();
-    // const target = state.get("feed").filter(each => each.contentIdx === targetId);
-    setDetail(targetId);
+    setDetail(contentIdx);
   };
 
   const closeModal = e => {
@@ -68,12 +68,10 @@ const FeedItems = () => {
     if (state.get("showFavorites")) data = state.get("favorites");
     else data = state.get("feed");
 
-    return data.map(item => (
+    return data.map((item, index) => (
       // TODO: 렌더링 때부터 (state를 따로 가지고 있길 바라는) 좋아요 데이터와 매칭시켜, like 또는 non-like 표시
-      <FlexChild onClick={e => showDetails(e, item.contentIdx)} style={{ backgroundImage: `url(${item.imageUrl})` }} key={item.contentIdx} id={item.contentIdx}>
-        {/* <ToggleFavoriteButton o /> */}
+      <FlexChild onClick={e => showDetails(e, item.contentIdx)} style={{ backgroundImage: `url(${item.imageUrl})` }} key={item.contentIdx + index} id={item.contentIdx}>
         <BookmarkIcon handler={e => toggleFavorite(e, item)} clicked={item.bookmarked ? true : false} />
-        {/* <ToggleLikeButton  /> */}
         <LikeIcon handler={e => toggleLike(e, item)} clicked={item.liked ? true : false} />
       </FlexChild>
     ));
@@ -81,7 +79,7 @@ const FeedItems = () => {
 
   return (
     <>
-      {detail ? <Detail target={detail} closeModal={closeModal} /> : null}
+      {detail ? <Detail contentIdx={detail} closeModal={closeModal} /> : null}
       <div>현재 선택된 지역: {state.get("region")}</div>
       <div>현재 선택된 퍼소널리티 : {state.get("personality")}</div>
       <FlexParent>{items()}</FlexParent>

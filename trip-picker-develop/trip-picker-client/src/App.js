@@ -20,7 +20,7 @@ function App() {
       <StateContext.Provider value={state}>
         <Header>
           <h1>Trip-Picker</h1>
-          <h5>여행지 선정부터 관광지 추천까지</h5>
+          <h5>"여행지 선정부터 관광지 추천까지"</h5>
         </Header>
         <AppContainer className="App">
           {state.get("error") ? <Error /> : null}
