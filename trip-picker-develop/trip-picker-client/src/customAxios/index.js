@@ -15,7 +15,7 @@ const getUrl = subject => {
     case "UPDATE_REGION":
       return rootUrl + "/users/locations";
     case "RECOMMEND_REGION":
-      return "???";
+      return "http://localhost:5000/predict";
     case "GET_PERSONALITY":
       return rootUrl + "/users/personalities/";
     case "UPDATE_PERSONALITY":
@@ -31,7 +31,7 @@ const getUrl = subject => {
     case "REMOVE_LIKE":
       return rootUrl + "/likes/cancel";
     case "GET_FAVORITES":
-      return rootUrl + "?";
+      return rootUrl + "/bookmarks/";
     default:
       console.log("wrong URL call!");
       return rootUrl;
@@ -108,15 +108,15 @@ const updateRegion = async (dispatch, data) => {
 };
 
 const recommendRegion = async (dispatch, data) => {
-  // TODO: axios로 파이썬 서버에 보내고 --> 그 지역 코드 리턴 받아서 --> 지역 명 뽑아내고 --> 서버에 저장하고 --> state.get('region') update하기
-  // TODO: 미성님 서버에 데이터 보내서 "지역코드" 리턴받기
+  const { fullData, userIdx } = data;
 
-  // const response = Axios.post(getUrl("RECOMMEND_REGION"), data);
-  // const regionCode = response.code;
-  // const fullRegion = regionInfo[regionCode]["fullRegion"];
-  // dispatch({ type: "UPDATE_REGION", payload: fullRegion });
+  let response;
+  response = await Axios.post(getUrl("RECOMMEND_REGION"), fullData).catch(_ => (response = { predictions: 939010 }));
+  const { predictions } = response;
+  const fullRegion = regionInfo[predictions]["fullRegion"];
+  updateRegion(dispatch, { region: fullRegion, userIdx });
   // Below: TEST
-  dispatch({ type: "UPDATE_REGION", payload: "서울 마포구" });
+  // dispatch({ type: "UPDATE_REGION", payload: "서울 마포구" });
 };
 
 const getPersonality = async (dispatch, data) => {
@@ -135,13 +135,14 @@ const updatePersonality = async (dispatch, data) => {
 };
 
 const getFeed = async (dispatch, data) => {
+  // 기능 체크 완료
   // 1. 전체 (내 퍼소널리티에 맞는) 아이템들
   let feed, likes, favorites;
   let payload = { feed: feed || [], favorites: favorites || [], likes: likes || [] }; // 로딩 화면을 보여주기 위해
   dispatch({ type: "UPDATE_FEED", payload: payload });
   let response = await Axios.get(getUrl("GET_FEED") + data.userIdx).catch(_ => []);
   if (response.data.status === 200) feed = response.data.data;
-  payload = { feed: feed || [], favorites: favorites || [], likes: likes || [] };
+  payload = { feed: feed || [] };
   dispatch({ type: "UPDATE_FEED", payload: payload });
   // Below: TEST
   // const payload = { feed: [], favorites: [], likes: [] };
@@ -175,10 +176,10 @@ const removeLike = async (dispatch, data) => {
 };
 
 const getFavorites = async (dispatch, data) => {
-  const response = await Axios.post(getUrl("GET_FAVORITES") + data.id);
-  console.log("getFavorites--->", response.data);
-  if (response === 200) {
-    dispatch("UPDATE_FAVORITES", { payload: response.data.data });
+  // 기능 체크 완료
+  const response = await Axios.get(getUrl("GET_FAVORITES") + data.userIdx);
+  if (response.data.status === 200) {
+    dispatch({ type: "UPDATE_FAVORITES", payload: response.data.data });
   }
 };
 

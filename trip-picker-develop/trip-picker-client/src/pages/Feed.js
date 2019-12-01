@@ -11,10 +11,9 @@ const Feed = () => {
   useEffect(() => {
     const data = { userIdx: state.get("id") };
     axios("GET_FEED", dispatch, data);
+    axios("GET_FAVORITES", dispatch, data);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  console.log(state.get("showFavorites"));
 
   return (
     <div>

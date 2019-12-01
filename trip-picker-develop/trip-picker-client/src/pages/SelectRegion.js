@@ -11,6 +11,7 @@ const SelectRegion = () => {
       case 0:
         return (
           <SelectRegionButton>
+            <h1>어디로 여행을 떠나시겠습니까?</h1>
             <button onClick={_ => setOption(1)}>직접입력</button>
             <button onClick={_ => setOption(2)}>추천받기</button>
           </SelectRegionButton>

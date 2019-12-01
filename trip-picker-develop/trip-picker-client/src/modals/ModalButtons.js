@@ -13,9 +13,10 @@ const ModalButtons = () => {
     e.preventDefault();
     const data = { userIdx: state.get("id") };
     axios("GET_FEED", dispatch, data);
+    axios("GET_FAVORITES", dispatch, data);
   };
   const toggleShowFavorites = () => {
-    const payload = { feed: state.get("feed"), favorites: state.get("favorites"), showFavorites: state.get("showFavorites") };
+    const payload = { showFavorites: state.get("showFavorites") };
     dispatch({ type: "TOGGLE_SHOW_FAVORITES", payload: payload });
   };
   return ReactDOM.createPortal(

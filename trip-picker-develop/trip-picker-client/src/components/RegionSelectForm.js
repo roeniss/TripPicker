@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import useInputState from "../hooks/useInputState";
 import { axios } from "../customAxios";
-import { DispatchContext } from "../App";
+import { DispatchContext, StateContext } from "../App";
 import styled from "styled-components";
 
 const RegionSelectForm = () => {
@@ -15,10 +15,11 @@ const RegionSelectForm = () => {
   const [activity, setActivity] = useState(["0"]);
   const [sex, setSex] = useState(0);
   const [age, ageBind] = useInputState("");
-  const [marriage, setMarriage] = useState(0);
+  const [marriage, setMarriage] = useState(false);
   const [submitSwitch, setSubmitSwitch] = useState(false);
 
   const dispatch = useContext(DispatchContext);
+  const state = useContext(StateContext);
 
   const onSubmitHandler = e => {
     e.preventDefault();
@@ -29,8 +30,6 @@ const RegionSelectForm = () => {
     const converted_activity = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // 도합 20개
     activity.forEach(each => (converted_activity[Number(each)] = 1));
 
-    // console.log(oneday, month, purpose, accompany_presence, accompany_num, converted_accompany_relation, pay, converted_activity, sex, age, marriage); // TODO: Number로 변환해줘야될듯...
-
     const fullData = {
       oneday: Number(oneday),
       month: Number(month),
@@ -39,7 +38,7 @@ const RegionSelectForm = () => {
       accompany_num: Number(accompany_num),
       accompany_relation: converted_accompany_relation,
       pay: Number(pay),
-      activity: Number(converted_activity),
+      activity: converted_activity,
       sex: Number(sex),
       age: Number(age),
       marriage: Number(marriage)
@@ -48,7 +47,7 @@ const RegionSelectForm = () => {
     setSubmitSwitch(true);
 
     setTimeout(() => {
-      axios("RECOMMEND_REGION", dispatch, { data: fullData });
+      axios("RECOMMEND_REGION", dispatch, { fullData, userIdx: state.get("id") });
     }, 5000);
   };
 
@@ -61,6 +60,7 @@ const RegionSelectForm = () => {
     // TODO: accompany의 경우, 동행자 없음을 직접 눌러서 해제해야하는 이슈가 있음. 최소 1개 이상이 선택되어있도록 Select DOM이 설계된 듯. (전체 선택 해제가 안됨...)
     setAccompany_relation(options);
   };
+
   const onChangeHandler2 = e => {
     const options = activity;
     const selectedOption = [...e.target.options].filter(o => o.selected).map(o => o.value);
@@ -190,7 +190,7 @@ const RegionSelectForm = () => {
           <label htmlFor="marriage"></label>결혼 여부
           <br />
           <select name="marriage" onChange={e => setMarriage(e.target.value)} id="marriage" value={marriage}>
-            <option value="0"></option>
+            <option value={false}></option>
             <option value="0">미혼</option>
             <option value="1">기혼</option>
           </select>
