@@ -27,7 +27,7 @@ public class ItemService {
     private final int TOTAL_NUM_OF_ITEMS = 100;
     private final List<String> categoryCodeList = new ArrayList<>(
             Arrays.asList("A0101", "A0201", "A0202", "A0203", "A0204", "A0205", "A0206", "A0207", "A0208"
-                    ,"A0302", "A0303", "A0304", "A0305"
+                    , "A0302", "A0303", "A0304", "A0305"
                     , "A0401", "A0502"));
 
     private static Map<CustomCategoryType, ArrayList<String>> categoryCodeMap = new HashMap() {{
@@ -112,50 +112,7 @@ public class ItemService {
             if (!personalityCategoryRatioAndNumberList.isPresent()) {
                 List<TourApiItem> tourApiItemList =
                         tourApiService.findAllData(areaCode, sggCode);
-                List<ItemRes> itemResList = new ArrayList<>();
-                Optional<List<ItemLike>> likeList = itemLikeRepository.findAllByUserIdx(userIdx);
-                Optional<List<UserBookmark>> bookmarkList = userBookmarkRepository.findAllByUserIdx(userIdx);
-                for (int i = 0; i < tourApiItemList.size(); i++) {
-                    boolean isExist = false;
-                    for(int j = 0; j < categoryCodeList.size(); j++){
-                        if(tourApiItemList.get(i).getCategoryCode().equals(categoryCodeList.get(j))){
-                            isExist = true;
-                            break;
-                        }
-                    }
-                    if(!isExist == true) continue;
-                    CustomCategoryType customCategoryType = getCategoryType(tourApiItemList.get(i).getCategoryCode());
-
-                    ItemRes itemRes = new ItemRes();
-                    itemRes.setContentIdx(tourApiItemList.get(i).getContentIdx());
-                    itemRes.setImageUrl(tourApiItemList.get(i).getImageUrl());
-                    itemRes.setCategoryCode(customCategoryType);
-                    itemRes.setSubCategoryCode(tourApiItemList.get(i).getSubCategoryCode());
-                    itemRes.setLiked(false);
-                    itemRes.setBookmarked(false);
-
-                    if (likeList.isPresent()) {
-                        for (int j = 0; j < likeList.get().size(); j++) {
-                            int likedContentIdx = likeList.get().get(j).getContentIdx();
-                            if (likedContentIdx == tourApiItemList.get(i).getContentIdx()) {
-                                itemRes.setLiked(true);
-                                break;
-                            }
-                        }
-                    }
-
-                    if (bookmarkList.isPresent()) {
-                        for (int j = 0; j < bookmarkList.get().size(); j++) {
-                            int bookmarkedContentIdx = bookmarkList.get().get(j).getContentIdx();
-                            if (bookmarkedContentIdx == tourApiItemList.get(i).getContentIdx()) {
-                                itemRes.setBookmarked(true);
-                                break;
-                            }
-                        }
-                    }
-
-                    itemResList.add(itemRes);
-                }
+                List<ItemRes> itemResList = setLikesAndBookmarks(tourApiItemList, userIdx);
                 return DefaultRes.res(StatusCode.OK, "아이템 전체 조회 성공", itemResList);
             }
 
@@ -163,62 +120,75 @@ public class ItemService {
             else {
                 List<PersonalityCategoryRatioAndNumber> pcList =
                         personalityCategoryRatioAndNumberList.get();
-                for (int i = 0; i < pcList.size(); i++) {
-                    System.out.println("ratio : " + pcList.get(i).getRatio() + "   category : " + pcList.get(i).getCategoryCode() +
-                            "    num : " + pcList.get(i).getNumber());
+
+                List<UserPersonality> userPersonalityList =
+                        userPersonalityRepository.findAllByPersonalityType(personalityType).get();
+
+                List<Integer> userIdxList = new ArrayList<>();
+                for(UserPersonality upl : userPersonalityList){
+                    userIdxList.add(upl.getUserIdx());
                 }
+
+                /*
+                List<ItemLike> itemLikeList = new ArrayList<>();
+                for(Integer id : userIdxList){
+                    List<ItemLike> itemLikeTempList =
+                            itemLikeRepository.findAllByUserIdx(id.intValue()).get();
+                    itemLikeList.addAll(itemLikeTempList);
+                }
+                */
+
+                //여기까지//
+
                 List<TourApiItem> tourApiItemList =
                         tourApiService.findAllData(areaCode, sggCode);
-                List<ItemRes> itemResList = new ArrayList<>();
-                Optional<List<ItemLike>> likeList = itemLikeRepository.findAllByUserIdx(userIdx);
-                Optional<List<UserBookmark>> bookmarkList = userBookmarkRepository.findAllByUserIdx(userIdx);
-                for (int i = 0; i < tourApiItemList.size(); i++) {
-                    boolean isExist = false;
-                    for(int j = 0; j < categoryCodeList.size(); j++){
-                        if(tourApiItemList.get(i).getCategoryCode().equals(categoryCodeList.get(j))){
-                            isExist = true;
+
+                List<TourApiItem> tourApiItemListAfterApplyRatio = new ArrayList<>();
+
+                for(int j = 0; j < tourApiItemList.size(); j++){
+                    String categoryCode = tourApiItemList.get(j).getCategoryCode();
+                    if(transCategoryCodeIntoCustomCategoryType(categoryCode) == null){
+                        continue;
+                    }
+                    CustomCategoryType customCategoryType =
+                            transCategoryCodeIntoCustomCategoryType(categoryCode);
+                    for(int k = 0; k < pcList.size(); k++){
+                        if(customCategoryType.equals(pcList.get(k).getCategoryCode())){
+                            TourApiItem tourApiItem = tourApiItemList.get(j);
+                            tourApiItemListAfterApplyRatio.add(tourApiItem);
+                            pcList.get(k).setStackedNumber(pcList.get(k).getStackedNumber() + 1);
                             break;
                         }
                     }
-                    if(!isExist) continue;
-                    CustomCategoryType customCategoryType = getCategoryType(tourApiItemList.get(i).getCategoryCode());
-
-                    ItemRes itemRes = new ItemRes();
-                    itemRes.setContentIdx(tourApiItemList.get(i).getContentIdx());
-                    itemRes.setImageUrl(tourApiItemList.get(i).getImageUrl());
-                    itemRes.setCategoryCode(customCategoryType);
-                    itemRes.setSubCategoryCode(tourApiItemList.get(i).getSubCategoryCode());
-                    itemRes.setLiked(false);
-                    itemRes.setBookmarked(false);
-
-                    if (likeList.isPresent()) {
-                        for (int k = 0; k < likeList.get().size(); k++) {
-                            int likedContentIdx = likeList.get().get(k).getContentIdx();
-                            if (likedContentIdx == tourApiItemList.get(i).getContentIdx()) {
-                                itemRes.setLiked(true);
-                                break;
-                            }
-                        }
-                    }
-
-                    if (bookmarkList.isPresent()) {
-                        for (int k = 0; k < bookmarkList.get().size(); k++) {
-                            int bookmarkedContentIdx = bookmarkList.get().get(k).getContentIdx();
-                            if (bookmarkedContentIdx == tourApiItemList.get(i).getContentIdx()) {
-                                itemRes.setBookmarked(true);
-                                break;
-                            }
-                        }
-                    }
-
-                    itemResList.add(itemRes);
                 }
+
+                for(PersonalityCategoryRatioAndNumber p : pcList){
+                    System.out.println("Category : " + p.getCategoryCode() + "  Stacked Number : " + p.getStackedNumber());
+                }
+                for(TourApiItem t : tourApiItemListAfterApplyRatio){
+                    System.out.println("Code : " + t.getCategoryCode() + "  Title : " + t.getTitle());
+                }
+
+                //List<ItemRes> itemResList = setLikesAndBookmarks(tourApiItemList, userIdx);
+                List<ItemRes> itemResList = setLikesAndBookmarks(tourApiItemListAfterApplyRatio, userIdx);
                 return DefaultRes.res(StatusCode.OK, "아이템 전체 조회 성공", itemResList);
             }
         } catch (Exception e) {
             System.out.println(e);
             return DefaultRes.res(StatusCode.NOT_FOUND, "아이템을 찾을 수 없습니다.");
         }
+    }
+
+    public CustomCategoryType transCategoryCodeIntoCustomCategoryType(String categoryCode){
+        for (CustomCategoryType customCategoryType : categoryCodeMap.keySet()) {
+            List<String> categoryCodeList = categoryCodeMap.get(customCategoryType);
+            for(String c : categoryCodeList){
+                if(c.equals(categoryCode)){
+                    return customCategoryType;
+                }
+            }
+        }
+        return null;
     }
 
     public Optional<List<PersonalityCategoryRatioAndNumber>>
@@ -236,25 +206,20 @@ public class ItemService {
                     List<PersonalityCategoryRatioAndNumber> personalityCategoryRatioList = new ArrayList<>();
                     int numOfUserInPersonality =
                             userPersonalityRepository.countByPersonalityType(personalityType).get().intValue();
-                    final int numOfCategory = 10;
-                    double personalityCategoryLikesCount = 0;
+                    final double numOfCategory = 10.0;
                     for (CustomCategoryType categoryCode : categoryCodeMap.keySet()) {
+                        double personalityCategoryLikesCount = 0;
                         for (int i = 0; i < personalityCategoryList.get().size(); i++) {
-                            List<String> categoryCodeMapList =
-                                    categoryCodeMap.get(categoryCode);
-
-                            for (int j = 0; j < categoryCodeMapList.size(); j++) {
-                                if (categoryCodeMapList.get(j).equals(personalityCategoryList.get().get(i))) {
-                                    personalityCategoryLikesCount =
-                                            (double) personalityCategoryList.get().get(i).getLikesCount();
-                                    break;
-                                }
+                            if (categoryCode.equals(personalityCategoryList.get().get(i).getCategoryCode())) {
+                                personalityCategoryLikesCount =
+                                        (double) personalityCategoryList.get().get(i).getLikesCount();
+                                break;
                             }
                         }
 
                         // (1/C) + ((x/y) - (1/C))/n
 
-                        double ratio = 1.0 / (double) (numOfCategory) +
+                        double ratio = 1.0 / (numOfCategory) +
                                 (((personalityCategoryLikesCount / personalityLikesCount) -
                                         (1 / (numOfCategory))) / (numOfUserInPersonality));
 
@@ -263,6 +228,7 @@ public class ItemService {
                         personalityCategoryRatio.setCategoryCode(categoryCode);
                         personalityCategoryRatio.setRatio(ratio);
                         personalityCategoryRatio.setNumber(num);
+                        personalityCategoryRatio.setStackedNumber(0);
                         personalityCategoryRatioList.add(personalityCategoryRatio);
                     }
                     return Optional.of(personalityCategoryRatioList);
@@ -274,15 +240,62 @@ public class ItemService {
         }
     }
 
-    public CustomCategoryType getCategoryType(String categoryCode){
-        for(CustomCategoryType t : categoryCodeMap.keySet()){
+    public CustomCategoryType getCategoryType(String categoryCode) {
+        for (CustomCategoryType t : categoryCodeMap.keySet()) {
             List<String> categoryCodeMapList = categoryCodeMap.get(t);
-            for(int i = 0; i < categoryCodeMapList.size(); i++){
-                if(categoryCodeMapList.get(i).equals(categoryCode)){
+            for (int i = 0; i < categoryCodeMapList.size(); i++) {
+                if (categoryCodeMapList.get(i).equals(categoryCode)) {
                     return t;
                 }
             }
         }
         return null;
+    }
+
+    public List<ItemRes> setLikesAndBookmarks(final List<TourApiItem> tourApiItemList, final int userIdx){
+        List<ItemRes> itemResList = new ArrayList<>();
+        Optional<List<ItemLike>> likeList = itemLikeRepository.findAllByUserIdx(userIdx);
+        Optional<List<UserBookmark>> bookmarkList = userBookmarkRepository.findAllByUserIdx(userIdx);
+        for (int i = 0; i < tourApiItemList.size(); i++) {
+            boolean isExist = false;
+            for (int j = 0; j < categoryCodeList.size(); j++) {
+                if (tourApiItemList.get(i).getCategoryCode().equals(categoryCodeList.get(j))) {
+                    isExist = true;
+                    break;
+                }
+            }
+            if (!isExist) continue;
+            CustomCategoryType customCategoryType = getCategoryType(tourApiItemList.get(i).getCategoryCode());
+
+            ItemRes itemRes = new ItemRes();
+            itemRes.setContentIdx(tourApiItemList.get(i).getContentIdx());
+            itemRes.setImageUrl(tourApiItemList.get(i).getImageUrl());
+            itemRes.setCategoryCode(customCategoryType);
+            itemRes.setSubCategoryCode(tourApiItemList.get(i).getSubCategoryCode());
+            itemRes.setLiked(false);
+            itemRes.setBookmarked(false);
+
+            if (likeList.isPresent()) {
+                for (int k = 0; k < likeList.get().size(); k++) {
+                    int likedContentIdx = likeList.get().get(k).getContentIdx();
+                    if (likedContentIdx == tourApiItemList.get(i).getContentIdx()) {
+                        itemRes.setLiked(true);
+                        break;
+                    }
+                }
+            }
+
+            if (bookmarkList.isPresent()) {
+                for (int k = 0; k < bookmarkList.get().size(); k++) {
+                    int bookmarkedContentIdx = bookmarkList.get().get(k).getContentIdx();
+                    if (bookmarkedContentIdx == tourApiItemList.get(i).getContentIdx()) {
+                        itemRes.setBookmarked(true);
+                        break;
+                    }
+                }
+            }
+            itemResList.add(itemRes);
+        }
+        return itemResList;
     }
 }

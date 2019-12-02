@@ -8,4 +8,5 @@ public class PersonalityCategoryRatioAndNumber {
     private CustomCategoryType categoryCode;
     private double ratio;
     private int number;
+    private int stackedNumber;
 }

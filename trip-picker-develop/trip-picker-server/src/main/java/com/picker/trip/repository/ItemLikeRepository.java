@@ -10,6 +10,8 @@ import java.util.Optional;
 public interface ItemLikeRepository extends JpaRepository<ItemLike, Integer> {
     Optional<List<ItemLike>> findAllByUserIdx(int userIdx);
 
+    Optional<ItemLike> findByUserIdxAndContentIdx(int userIdx, int contentIdx);
+
     @Transactional
     void deleteByUserIdxAndContentIdx(int userIdx, int contentIdx);
 }
