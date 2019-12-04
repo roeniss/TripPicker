@@ -14,5 +14,7 @@ public class UserLocation {
     private int userIdx;
 
     private String region;
+    private int areaCode;
+    private int sggCode;
 
 }

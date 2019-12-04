@@ -3,7 +3,8 @@ package com.picker.trip.model;
 import lombok.Data;
 
 @Data
-public class SggCode {
-    private int sggCodeIdx;
+public class Region {
+    private int areaCode;
+    private int sggCode;
     private String name;
 }
