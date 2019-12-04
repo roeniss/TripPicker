@@ -16,4 +16,8 @@ public class Item {
     private String subCategoryCode;
 
     private int likesCount;
+
+    private String imageUrl;
+    private String title;
+
 }

@@ -9,6 +9,7 @@ public class BookmarkItem {
     private CustomCategoryType categoryCode;
     private String subCategoryCode;
     private String imageUrl;
+    private String title;
     private boolean isLiked;
     private boolean isBookmarked;
 }

@@ -17,4 +17,7 @@ public class ItemLike {
     private int contentIdx;
     private CustomCategoryType categoryCode;
     private String subCategoryCode;
+
+    private String imageUrl;
+    private String title;
 }

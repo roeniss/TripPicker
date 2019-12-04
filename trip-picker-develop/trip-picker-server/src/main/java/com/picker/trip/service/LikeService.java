@@ -86,6 +86,8 @@ public class LikeService {
             item.setCategoryCode(itemLike.getCategoryCode());
             item.setContentIdx(itemLike.getContentIdx());
             item.setSubCategoryCode(itemLike.getSubCategoryCode());
+            item.setImageUrl(itemLike.getImageUrl());
+            item.setTitle(itemLike.getTitle());
 
             if(!itemRepository.findByContentIdx(itemLike.getContentIdx()).isPresent()){
                 item.setLikesCount(1);

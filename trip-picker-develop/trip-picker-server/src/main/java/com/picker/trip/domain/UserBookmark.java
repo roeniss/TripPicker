@@ -15,6 +15,8 @@ public class UserBookmark {
 
     private int userIdx;
     private int contentIdx;
+    private String imageUrl;
+    private String title;
     private CustomCategoryType categoryCode;
     private String subCategoryCode;
 }

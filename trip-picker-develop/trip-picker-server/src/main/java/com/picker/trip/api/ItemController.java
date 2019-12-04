@@ -39,4 +39,17 @@ public class ItemController {
             return new ResponseEntity<>(FAIL_DEFAULT_RES, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
+    @GetMapping("/items/detail")
+    public ResponseEntity<DefaultRes> getItem(@RequestParam("userIdx") final int userIdx,
+                                              @RequestParam("isSelected") final boolean isSelected,
+                                                  @RequestParam("contentIdx") final int contentIdx ) {
+        try {
+            return new ResponseEntity<>(itemService.findSpecItem(userIdx, contentIdx, isSelected), HttpStatus.OK);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(FAIL_DEFAULT_RES, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

@@ -9,8 +9,6 @@ public class TourApiItem {
     private String title;
     private String categoryCode;
     private String subCategoryCode;
-    private String address;
-    private String phoneNumber;
     private String imageUrl;
     private TourApiItemCommon tourApiItemCommon;
 }
