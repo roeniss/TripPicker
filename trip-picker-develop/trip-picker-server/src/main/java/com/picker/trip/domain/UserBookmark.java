@@ -5,6 +5,10 @@ import lombok.Data;
 
 import javax.persistence.*;
 
+/**
+ * UserBookmark Entity Class
+ */
+
 @Data
 @Entity
 @Table(name = "user_bookmark")

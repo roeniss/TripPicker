@@ -5,6 +5,10 @@ import lombok.Data;
 
 import javax.persistence.*;
 
+/**
+ * Item Entity Class
+ */
+
 @Data
 @Entity
 @Table(name = "item")
@@ -19,5 +23,4 @@ public class Item {
 
     private String imageUrl;
     private String title;
-
 }

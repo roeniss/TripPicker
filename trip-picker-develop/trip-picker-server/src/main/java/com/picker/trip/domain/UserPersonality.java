@@ -7,6 +7,10 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * UserPersonality Entity Class
+ */
+
 @Data
 @Entity
 @Table(name = "user_personality")
