@@ -9,7 +9,6 @@ import java.util.Optional;
 
 public interface UserPersonalityRepository extends JpaRepository<UserPersonality, Integer> {
     Optional<UserPersonality> findByUserIdx(int userIdx);
-
     Optional<Integer> countByPersonalityType(PersonalityType personalityType);
     Optional<List<UserPersonality>> findAllByPersonalityType(PersonalityType personalityType);
 }
