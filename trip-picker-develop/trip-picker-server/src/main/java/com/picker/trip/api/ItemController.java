@@ -25,6 +25,12 @@ public class ItemController {
         this.itemService = itemService;
     }
 
+    /**
+     * 아이템 전체 조회
+     * @param userIdx
+     * @param isSelected (true -> 회원 선택 지역 기반 추천 / false -> 회원 선호 정보 기반 추천)
+     * @return ResponseEntity<DefaultRes>
+     */
     @GetMapping("/items")
     public ResponseEntity<DefaultRes> getAllItems(@RequestParam("userIdx") final int userIdx,
                                                   @RequestParam("isSelected") final boolean isSelected) {
@@ -36,7 +42,13 @@ public class ItemController {
         }
     }
 
-
+    /**
+     * 아이템 상세 조회
+     * @param userIdx
+     * @param isSelected (true -> 회원 선택 지역 기반 추천 / false -> 회원 선호 정보 기반 추천)
+     * @param contentIdx 아이템 고유 번호
+     * @return ResponseEntity<DefaultRes>
+     */
     @GetMapping("/items/detail")
     public ResponseEntity<DefaultRes> getItem(@RequestParam("userIdx") final int userIdx,
                                               @RequestParam("isSelected") final boolean isSelected,
