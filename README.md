@@ -28,15 +28,15 @@ Y세대가 주요한 경제 주체로 떠오르는 가운데, Y세대의 국내 
 
 [통합회의록](/관리산출물) : 회의록 통합
 
-[SRS](/관리산출물/설계산출물 SRS SAD/SRS)   현재 버전 4.0
+[SRS](/관리산출물/설계산출물 SRS SAD/SRS/) :    현재 버전 4.0
 
-[SAD](/관리산출물/설계산출물 SRS SAD/SAD) : 현재 버전 1.0
+[SAD](/관리산출물/설계산출물 SRS SAD/SAD/) : 현재 버전 1.0
 
-[GUISKETCH](/관리산출물/GUI_SKETCH)  : 현재 버전 3.0
+[GUISKETCH](/관리산출물/GUI_SKETCH/)  : 현재 버전 3.0
 
-[PMP](/관리산출물/관리산출물PMP PSP/PMP)
+[PMP](/관리산출물/관리산출물PMP PSP/PMP/) : 
 
-[PSP](/관리산출물/관리산출물PMP PSP/PSP)
+[PSP](/관리산출물/관리산출물PMP PSP/PSP/) :
 
 
 
