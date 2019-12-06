@@ -10,7 +10,6 @@ import java.util.Optional;
 
 public interface UserBookmarkRepository extends JpaRepository<UserBookmark, Integer> {
     Optional<List<UserBookmark>> findAllByUserIdx(int userIdx);
-
     Optional<UserBookmark> findByUserIdxAndContentIdx(int userIdx, int contentIdx);
 
     @Transactional

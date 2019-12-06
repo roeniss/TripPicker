@@ -15,12 +15,18 @@ import static com.picker.trip.model.DefaultRes.FAIL_DEFAULT_RES;
 @Slf4j
 @RestController
 public class LikeController {
+
     private final LikeService likeService;
 
     public LikeController(final LikeService likeService) {
         this.likeService = likeService;
     }
 
+    /**
+     * 좋아요
+     * @param itemLike
+     * @return ResponseEntity<DefaultRes>
+     */
     @PostMapping("/likes")
     public ResponseEntity<DefaultRes> saveItemLike(@RequestBody final ItemLike itemLike) {
         try {
@@ -31,6 +37,11 @@ public class LikeController {
         }
     }
 
+    /**
+     * 좋아요 취소
+     * @param itemLike
+     * @return ResponseEntity<DefaultRes>
+     */
     @PostMapping("/likes/cancel")
     public ResponseEntity<DefaultRes> cancelItemLike(@RequestBody final ItemLike itemLike) {
         try {

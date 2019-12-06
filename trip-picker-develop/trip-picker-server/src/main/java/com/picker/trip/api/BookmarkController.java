@@ -13,12 +13,18 @@ import static com.picker.trip.model.DefaultRes.FAIL_DEFAULT_RES;
 @Slf4j
 @RestController
 public class BookmarkController {
+
     private final BookmarkService bookmarkService;
 
     public BookmarkController(final BookmarkService bookmarkService) {
         this.bookmarkService = bookmarkService;
     }
 
+    /**
+     * 즐겨찾기
+     * @param userBookmark
+     * @return ResponseEntity<DefaultRes>
+     */
     @PostMapping("/bookmarks")
     public ResponseEntity<DefaultRes> saveUserBookmark(@RequestBody final UserBookmark userBookmark) {
         try {
@@ -29,6 +35,11 @@ public class BookmarkController {
         }
     }
 
+    /**
+     * 즐겨찾기 취소
+     * @param userBookmark
+     * @return ResponseEntity<DefaultRes>
+     */
     @PostMapping("/bookmarks/cancel")
     public ResponseEntity<DefaultRes> cancelUserBookmark(@RequestBody final UserBookmark userBookmark) {
         try {
@@ -39,6 +50,11 @@ public class BookmarkController {
         }
     }
 
+    /**
+     * 즐겨찾기 아이템 전체
+     * @param userIdx
+     * @return ResponseEntity<DefaultRes>
+     */
     @GetMapping("/bookmarks/{userIdx}")
     public ResponseEntity<DefaultRes> getAllBookmarkedItems(@PathVariable("userIdx") final int userIdx) {
         try {

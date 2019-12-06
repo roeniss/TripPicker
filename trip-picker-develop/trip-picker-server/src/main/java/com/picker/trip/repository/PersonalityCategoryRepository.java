@@ -13,6 +13,7 @@ public interface PersonalityCategoryRepository extends JpaRepository<Personality
     Optional<List<PersonalityCategory>> findAllByPersonalityType(PersonalityType personalityType);
     Optional<PersonalityCategory> findByPersonalityTypeAndCategoryCode
             (PersonalityType personalityType, CustomCategoryType categoryCode);
+
     @Transactional
     void deleteByPersonalityTypeAndCategoryCode(PersonalityType personalityType, CustomCategoryType categoryCode);
 }

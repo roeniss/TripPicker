@@ -1,7 +1,5 @@
 package com.picker.trip.config;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,12 +13,13 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 
+/**
+ * CORS 이슈 해결을 위한 Spring Security 설정
+ */
 
 @Configuration
 @EnableWebSecurity
 public class MyConfiguration extends WebSecurityConfigurerAdapter {
-
-    protected Logger logger = LogManager.getLogger(this.getClass());
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -42,5 +41,4 @@ public class MyConfiguration extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 }

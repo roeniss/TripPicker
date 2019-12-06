@@ -1,9 +1,5 @@
 package com.picker.trip.utils;
 
-/**
- * Created By ds on 2019-08-16.
- */
-
 import org.apache.tomcat.util.codec.binary.Base64;
 
 import javax.crypto.Cipher;
@@ -13,11 +9,6 @@ import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
-
-
-/**
- * Created by ds on 2019-08-16.
- */
 
 /**
  * 양방향 알고리즘
