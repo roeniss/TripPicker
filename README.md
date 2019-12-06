@@ -34,7 +34,7 @@ Y세대가 주요한 경제 주체로 떠오르는 가운데, Y세대의 국내 
 
 [GUISKETCH](/관리산출물/GUI_SKETCH/)  : 현재 버전 3.0
 
-[PMP](/관리산출물/관리산출물PMP_PSP/PMP/) : 
+[PMP](/관리산출물/관리산출물PMP_PSP/) : 
 
 [PSP](/관리산출물/관리산출물PMP_PSP/PSP/) :
 
