@@ -26,15 +26,19 @@ Y세대가 주요한 경제 주체로 떠오르는 가운데, Y세대의 국내 
 
 
 
-[통합회의록](\관리산출물\) : 회의록 통합
+[통합회의록](\관리산출물) : 회의록 통합
 
-[SRS](\관리산출물\설계산출물 SRS SAD\SRS\)   현재 버전 4.0
-[SAD](\관리산출물\설계산출물 SRS SAD\SAD\) : 현재 버전 1.0
-[GUISKETCH](\관리산출물\GUI_SKETCH\)  : 현재 버전 3.0
+[SRS](\관리산출물\설계산출물 SRS SAD\SRS)   현재 버전 4.0
 
-[PMP](\관리산출물\관리산출물PMP PSP\PMP\)
+[SAD](\관리산출물\설계산출물 SRS SAD\SAD) : 현재 버전 1.0
 
-[PSP](\관리산출물\관리산출물PMP PSP\PSP\)
+[GUISKETCH](\관리산출물\GUI_SKETCH)  : 현재 버전 3.0
+
+[PMP](\관리산출물\관리산출물PMP PSP\PMP)
+
+[PSP](\관리산출물\관리산출물PMP PSP\PSP)
+
+
 
 
 
@@ -43,7 +47,7 @@ Y세대가 주요한 경제 주체로 떠오르는 가운데, Y세대의 국내 
 
 ### 기능 2:  개발 소스
 
-[PSP 폴더](/trip-picker-develop)  개발 소스를 확인해 볼 수 있습니다.
+[개발소스디렉토리](/trip-picker-develop)  개발 소스를 확인해 볼 수 있습니다.
 
 Backend
 
