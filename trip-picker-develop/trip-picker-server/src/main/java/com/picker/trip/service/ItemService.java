@@ -116,7 +116,26 @@ public class ItemService {
                 List<TourApiItem> tourApiItemList =
                         tourApiService.findAllData(areaCode, sggCode);
 
-                return DefaultRes.res(StatusCode.OK, "아이템 전체 조회 성공");
+                List<ItemRes> itemResList = new ArrayList<>();
+                for(int i = 0; i < tourApiItemList.size(); i++){
+                    TourApiItem tourApiItem = tourApiItemList.get(i);
+                    ItemRes itemRes = new ItemRes();
+                    itemRes.setCategoryCode
+                            (transCategoryCodeIntoCustomCategoryType(tourApiItem.getCategoryCode()));
+                    itemRes.setImageUrl(tourApiItem.getImageUrl());
+                    itemRes.setSubCategoryCode(tourApiItem.getSubCategoryCode());
+                    itemRes.setTitle(tourApiItem.getTitle());
+                    itemRes.setContentIdx(tourApiItem.getContentIdx());
+
+                    itemResList.add(itemRes);
+                }
+                itemResList = itemResList.subList(0,100);
+
+                List<ItemRes> itemResListAfterSetLikesAndBookmarks =
+                        setLikesAndBookmarks(itemResList, userIdx);
+
+                return DefaultRes.res(StatusCode.OK, "아이템 전체 조회 성공",
+                        itemResListAfterSetLikesAndBookmarks);
             }
 
             // 반영 비율 및 개수를 계산 할 수 있을 때
@@ -164,12 +183,6 @@ public class ItemService {
                             itemRes.setContentIdx(item.getContentIdx());
                             itemRes.setCategoryCode(item.getCategoryCode());
                             itemRes.setSubCategoryCode(item.getSubCategoryCode());
-
-                            /*
-                            BookmarkItem bookmarkItem =
-                                    tourApiService.findDataByContentIdx(item.getContentIdx());
-                                    */
-
                             itemRes.setImageUrl(item.getImageUrl());
                             itemRes.setTitle(item.getTitle());
 
@@ -296,7 +309,7 @@ public class ItemService {
             for(RelatedItem r : relatedItemList){
                 if(finalRelateItemList.size() == 2) break;
                 if(!itemRepository.findByContentIdx(r.getContentIdx()).isPresent()
-                && tourApiItem.getContentIdx() != r.getContentIdx()){
+                        && tourApiItem.getContentIdx() != r.getContentIdx()){
                     finalRelateItemList.add(r);
                 }
             }

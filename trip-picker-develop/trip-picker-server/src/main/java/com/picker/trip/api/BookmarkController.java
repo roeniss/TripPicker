@@ -58,7 +58,7 @@ public class BookmarkController {
     @GetMapping("/bookmarks/{userIdx}")
     public ResponseEntity<DefaultRes> getAllBookmarkedItems(@PathVariable("userIdx") final int userIdx) {
         try {
-            return new ResponseEntity<>(bookmarkService.findAllBookmarkedItems(userIdx), HttpStatus.OK);
+            return new ResponseEntity<>(bookmarkService.findAllBookmarkedItemsByUserIdx(userIdx), HttpStatus.OK);
         } catch (Exception e) {
             log.error(e.getMessage());
             return new ResponseEntity<>(FAIL_DEFAULT_RES, HttpStatus.INTERNAL_SERVER_ERROR);
