@@ -46,6 +46,7 @@ const Detail = ({ contentIdx, userIdx, closeModal }) => {
     return () => {
       document.removeEventListener("wheel", preventWheel);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const gotoRelatedItem = (e, targetContentIdx) => {
@@ -56,7 +57,7 @@ const Detail = ({ contentIdx, userIdx, closeModal }) => {
   };
 
   const getHomepageLinkTag = (link, text = "홈페이지 바로가기") => (
-    <a href={link || "http://54.180.29.122/"} target="_blank">
+    <a href={link || "http://54.180.29.122/"} target="_blank" rel="noopener noreferrer">
       {text}
     </a>
   );
