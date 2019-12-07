@@ -30,7 +30,7 @@ const Detail = ({ contentIdx, userIdx, closeModal }) => {
     Axios.get("http://13.125.191.60:8080/items/detail?isSelected=true&" + params).then(({ data }) => {
       setItem(data.data);
     });
-    fetchFailhandling();
+    // fetchFailhandling();
   };
 
   useEffect(() => {

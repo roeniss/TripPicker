@@ -5,8 +5,8 @@ import { axios } from "../customAxios";
 import styled from "styled-components";
 
 const Login = () => {
-  const [email, emailBind] = useInputState("abcd@mail.com"); // TODO: 지워
-  const [password, passwordBind] = useInputState("1234"); // TODO: 지워
+  const [email, emailBind] = useInputState("");
+  const [password, passwordBind] = useInputState("");
 
   const dispatch = useContext(DispatchContext);
 

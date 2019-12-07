@@ -70,11 +70,8 @@ const FeedItems = () => {
     else data = state.get("feed");
 
     return data.map((item, _index) => {
-      console.log(item);
-
       const key = state.get("showFavorites") + item.contentIdx;
       return (
-        // TODO: 렌더링 때부터 (state를 따로 가지고 있길 바라는) 좋아요 데이터와 매칭시켜, like 또는 non-like 표시
         <FlexChild onClick={e => showDetails(e, item.contentIdx)} style={{ backgroundImage: `url(${item.imageUrl})` }} key={key} id={item.contentIdx}>
           <BookmarkIcon handler={e => toggleFavorite(e, item)} clicked={item.bookmarked ? true : false} />
           <LikeIcon handler={e => toggleLike(e, item)} clicked={item.liked ? true : false} />

@@ -79,7 +79,7 @@ const RegionSelectForm = () => {
     const idx = options.indexOf(selectedOption[0]);
     if (idx > -1) options.splice(idx, 1);
     else options.push(selectedOption[0]);
-    // TODO: accompany의 경우, 동행자 없음을 직접 눌러서 해제해야하는 이슈가 있음. 최소 1개 이상이 선택되어있도록 Select DOM이 설계된 듯. (전체 선택 해제가 안됨...)
+    // WARNING: accompany의 경우, 동행자 없음을 직접 눌러서 해제해야하는 이슈가 있음. 최소 1개 이상이 선택되어있도록 Select DOM이 설계된 듯. (전체 선택 해제가 안됨...)
     setAccompany_relation(options);
   };
 

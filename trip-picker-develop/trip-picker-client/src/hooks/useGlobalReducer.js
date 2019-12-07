@@ -94,7 +94,7 @@ const dummyItems = [
 
 const initialState = Map({
   loading: false,
-  id: 1, // 임시. 원래는 undefined
+  id: undefined, // 임시. 원래는 undefined
   error: "",
   page: "login",
   region: undefined, // 임시. 원래는 undefined
