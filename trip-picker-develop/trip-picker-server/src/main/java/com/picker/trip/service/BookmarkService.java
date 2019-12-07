@@ -1,16 +1,15 @@
 package com.picker.trip.service;
 
-import com.picker.trip.domain.ItemLike;
 import com.picker.trip.domain.UserBookmark;
 import com.picker.trip.model.BookmarkItem;
 import com.picker.trip.model.DefaultRes;
-import com.picker.trip.model.ItemRes;
-import com.picker.trip.model.TourApiItem;
-import com.picker.trip.model.enums.CustomCategoryType;
+
 import com.picker.trip.repository.ItemLikeRepository;
 import com.picker.trip.repository.UserBookmarkRepository;
 import com.picker.trip.utils.StatusCode;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -35,7 +34,8 @@ public class BookmarkService {
 
     /**
      * 즐겨찾기 저장
-     * @return
+     * @param userBookmark
+     * @return DefaultRes
      */
     public DefaultRes saveUserBookmark(final UserBookmark userBookmark){
         try {
@@ -48,7 +48,8 @@ public class BookmarkService {
     }
     /**
      * 즐겨찾기 취소
-     * @return
+     * @param userBookmark
+     * @return DefaultRes
      */
     public DefaultRes deleteUserBookmark(final UserBookmark userBookmark){
         try {
@@ -62,13 +63,15 @@ public class BookmarkService {
 
     /**
      * 즐겨찾기 아이템 전체 조회
-     * @return
+     * @param userIdx
+     * @return DefaultRes
      */
-    public DefaultRes findAllBookmarkedItems(final int userIdx){
+    public DefaultRes findAllBookmarkedItemsByUserIdx(final int userIdx){
         try {
-            if(!userBookmarkRepository.findAllByUserIdx(userIdx).isPresent()){
+            // 해당 유저가 즐겨찾기한 아이템이 없을 때
+            if(!userBookmarkRepository.findAllByUserIdx(userIdx).isPresent())
                 return DefaultRes.res(StatusCode.NOT_FOUND, "즐겨찾기한 아이템이 없습니다.");
-            }
+
             List<UserBookmark> userBookmarkList =
                     userBookmarkRepository.findAllByUserIdx(userIdx).get();
 
@@ -79,12 +82,14 @@ public class BookmarkService {
                 bookmarkItem.setCategoryCode(userBookmarkList.get(i).getCategoryCode());
                 bookmarkItem.setSubCategoryCode(userBookmarkList.get(i).getSubCategoryCode());
 
+                // set 좋아요
                 Optional itemLike = itemLikeRepository.findByUserIdxAndContentIdx
                         (userBookmarkList.get(i).getUserIdx(), userBookmarkList.get(i).getContentIdx());
 
                 if(!itemLike.isPresent()) bookmarkItem.setLiked(false);
                 else bookmarkItem.setLiked(true);
 
+                // set 즐겨찾기
                 Optional userBookmark = userBookmarkRepository.findByUserIdxAndContentIdx
                         (userBookmarkList.get(i).getUserIdx(), userBookmarkList.get(i).getContentIdx());
 

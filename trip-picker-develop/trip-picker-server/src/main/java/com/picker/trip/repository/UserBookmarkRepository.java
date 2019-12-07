@@ -1,6 +1,5 @@
 package com.picker.trip.repository;
 
-import com.picker.trip.domain.User;
 import com.picker.trip.domain.UserBookmark;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;

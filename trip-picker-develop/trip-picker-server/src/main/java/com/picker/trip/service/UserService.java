@@ -1,23 +1,15 @@
 package com.picker.trip.service;
 
-
 import com.picker.trip.domain.*;
 import com.picker.trip.model.*;
-import com.picker.trip.model.enums.ActivityType;
-import com.picker.trip.model.enums.PartnerType;
+
 import com.picker.trip.repository.*;
 import com.picker.trip.utils.AES256Util;
 import com.picker.trip.utils.StatusCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
-
-/**
- * Created By yw on 2019-09-25.
- */
 
 @Slf4j
 @Service
@@ -39,39 +31,8 @@ public class UserService {
     }
 
     /**
-     * 마이 페이지 조회
-     * 내가 스크랩 한 글 갯수
-     * 내 피드들 조회
-     * @param userIdx
-     * @return
-     */
-    public DefaultRes<User> findByUserIdx(final int userIdx) {
-        final Optional<User> user = userRepository.findById(userIdx);
-        return user.map(value -> DefaultRes.res(StatusCode.OK, "사용자 정보 조회 완료", value))
-                .orElseGet(() -> DefaultRes.res(StatusCode.NOT_FOUND, "사용자를 찾을 수 없습니다."));
-    }
-
-    /**
-     * 모든 회원 조회
-     * @return
-     */
-    public DefaultRes<List<UserRes>> findAllUsers() {
-        final List<User> users = userRepository.findAll();
-        final List<UserRes> userResList = new ArrayList<>();
-
-        for (User user: users) {
-            if(userPreferenceRepository.findByUserIdx(user.getUserIdx()).isPresent()){
-                UserRes userRes = new UserRes();
-                userRes.setUser(user);
-                userRes.setUserPreference(userPreferenceRepository.findByUserIdx(user.getUserIdx()).get());
-                userResList.add(userRes);
-            }
-        }
-        return DefaultRes.res(StatusCode.OK, "사용자 정보 조회 완료", userResList);
-    }
-
-    /**
      * 회원 정보 저장
+     * @param user
      * @return
      */
     public DefaultRes saveUser(final User user){
@@ -98,6 +59,7 @@ public class UserService {
 
     /**
      * 회원 선호 정보 저장
+     * @param userPreference
      * @return
      */
     public DefaultRes saveUserPreference(final UserPreference userPreference){
@@ -124,6 +86,7 @@ public class UserService {
 
     /**
      * 회원 퍼스널리티 저장
+     * @param userPersonality
      * @return
      */
     public DefaultRes saveUserPersonality(final UserPersonality userPersonality){
@@ -147,7 +110,6 @@ public class UserService {
         return userPersonality.map(value -> DefaultRes.res(StatusCode.OK, "회원 퍼스널리티 조회 성공", value))
                 .orElseGet(() -> DefaultRes.res(StatusCode.NOT_FOUND, "회원 퍼스널리티를 찾을 수 없습니다."));
     }
-
 
     /**
      * 회원 선택 지역 저장
