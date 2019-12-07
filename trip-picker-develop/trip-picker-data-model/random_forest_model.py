@@ -59,14 +59,14 @@ import sklearn.metrics as mt
 # 테스트 데이터는 전체의 25퍼센트.
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=0)
 # Random Forest 모델을 이용한 학습을 위해 개체 생성
-r_clf = RandomForestClassifier(n_estimators=200,    # 결정트리의 개수 . 값이 클수록 좋은 성능을 기대할 수 있지만 , 학습 시간이 오래 걸림
+r_clf = RandomForestClassifier(n_estimators=60,    # 결정트리의 개수 . 값이 클수록 좋은 성능을 기대할 수 있지만 , 학습 시간이 오래 걸림
                                criterion='gini',    # 결정트리 분할을 결정하는 함수. gini impurity를 사용하였다.
                                max_features='auto', # 최상의 분기를 위해서 고려하는 feature의 개수. auto를 사용하면 전체의 square root개수를 사용한다.
-                               max_depth=20,        # 결정트리의 최대 깊이
+                               max_depth=25,        # 결정트리의 최대 깊이
                                min_samples_split=2) # 결정트리에서 노드를 나눌 때 필요한 최소 샘플의 개수.
 
 r_clf.fit(X_train, y_train) # 학습용 데이터를 이용해 모델에 학습을 시킨다.
-y_pred = r_clf.predict(X_test) # 학습시킨 모델을 이용하여 예측한다.
+y_pred = r_clf.predict(X_test) # 학습시킨 모델E을 이용하여 예측한다.
 
 # 정확도와 confusion matrix를 이용해 모델을 검증해본다.
 print(mt.accuracy_score(y_test, y_pred))
@@ -74,14 +74,14 @@ print(mt.confusion_matrix(y_test, y_pred))
 
 # 출력 결과
 '''
-0.359845802847927
-[[ 74   1   1 ...   0   0   2]
- [  4  32   0 ...   0   0   0]
- [  0   1   6 ...   0   0   0]
+0.38981984108252693
+[[ 74   1   0 ...   0   0   1]
+ [  3  33   0 ...   0   0   1]
+ [  1   0   6 ...   0   0   0]
  ...
- [  0   0   0 ...  12   0   0]
- [  0   0   0 ...   0  49  41]
- [  1   0   0 ...   0   4 324]]
+ [  0   0   0 ...   9   0   0]
+ [  0   0   0 ...   0  58  38]
+ [  3   0   0 ...   0   9 311]]
 '''
 
 # 학습시킨 랜덤포레스트 모델을 저장하기 위해 불러오는 패키지
