@@ -15,8 +15,8 @@ const FeedItems = () => {
   const toggleFavorite = (e, item) => {
     e.preventDefault();
     e.stopPropagation();
-    const { contentIdx } = item;
-    const data = { userIdx: state.get("id"), contentIdx };
+    const { contentIdx, categoryCode, subCategoryCode, title, imageUrl } = item;
+    const data = { userIdx: state.get("id"), contentIdx, categoryCode, subCategoryCode, title, imageUrl };
     if (e.target.classList.contains("fas")) {
       axios("REMOVE_FAVORITE", dispatch, data);
       e.target.classList.remove("fas");
@@ -31,8 +31,8 @@ const FeedItems = () => {
   const toggleLike = (e, item) => {
     e.preventDefault();
     e.stopPropagation();
-    const { contentIdx, categoryCode, subCategoryCode } = item;
-    const data = { userIdx: state.get("id"), contentIdx, categoryCode, subCategoryCode };
+    const { contentIdx, categoryCode, subCategoryCode, title, imageUrl } = item;
+    const data = { userIdx: state.get("id"), contentIdx, categoryCode, subCategoryCode, title, imageUrl };
     if (e.target.classList.contains("fas")) {
       axios("REMOVE_LIKE", dispatch, data);
       e.target.classList.remove("fas");
@@ -64,24 +64,42 @@ const FeedItems = () => {
           <i className="fas fa-spinner fa-spin fa-10x"></i>
         </Loading>
       );
+
     let data;
     if (state.get("showFavorites")) data = state.get("favorites");
     else data = state.get("feed");
 
-    return data.map((item, index) => (
-      // TODO: 렌더링 때부터 (state를 따로 가지고 있길 바라는) 좋아요 데이터와 매칭시켜, like 또는 non-like 표시
-      <FlexChild onClick={e => showDetails(e, item.contentIdx)} style={{ backgroundImage: `url(${item.imageUrl})` }} key={item.contentIdx + index} id={item.contentIdx}>
-        <BookmarkIcon handler={e => toggleFavorite(e, item)} clicked={item.bookmarked ? true : false} />
-        <LikeIcon handler={e => toggleLike(e, item)} clicked={item.liked ? true : false} />
-      </FlexChild>
-    ));
+    return data.map((item, _index) => {
+      const key = state.get("showFavorites") + item.contentIdx;
+      return (
+        // TODO: 렌더링 때부터 (state를 따로 가지고 있길 바라는) 좋아요 데이터와 매칭시켜, like 또는 non-like 표시
+        <FlexChild onClick={e => showDetails(e, item.contentIdx)} style={{ backgroundImage: `url(${item.imageUrl})` }} key={key} id={item.contentIdx}>
+          <BookmarkIcon handler={e => toggleFavorite(e, item)} clicked={item.bookmarked ? true : false} />
+          <LikeIcon handler={e => toggleLike(e, item)} clicked={item.liked ? true : false} />
+        </FlexChild>
+      );
+    });
+  };
+
+  const convertPersonalityToKoren = personality => {
+    switch (personality) {
+      case "NATURE_PERSONAL":
+        return "자연속의 나";
+      case "EXTREME_PERSONAL":
+        return "활동적인";
+      case "CULTURE_PERSONAL":
+        return "문화생활";
+      default:
+        // case "FAMILY_PERSONAL":
+        return "가족여행";
+    }
   };
 
   return (
     <>
-      {detail ? <Detail contentIdx={detail} closeModal={closeModal} /> : null}
+      {detail ? <Detail contentIdx={detail} closeModal={closeModal} userIdx={state.get("id") || 1} /> : null}
       <div>현재 선택된 지역: {state.get("region")}</div>
-      <div>현재 선택된 퍼소널리티 : {state.get("personality")}</div>
+      <div>현재 선택된 퍼소널리티 : {convertPersonalityToKoren()}</div>
       <FlexParent>{items()}</FlexParent>
     </>
   );

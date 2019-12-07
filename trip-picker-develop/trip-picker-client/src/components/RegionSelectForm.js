@@ -23,6 +23,28 @@ const RegionSelectForm = () => {
 
   const onSubmitHandler = e => {
     e.preventDefault();
+    e.stopPropagation();
+
+    if (pay === "" || isNaN(pay) || !Number.isInteger(Number(pay)) || Number(pay) < 0) return alert("올바른 값을 입력해주세요(총 예산)");
+    if (!["1", "2"].includes(oneday)) return alert("올바른 값을 입력해주세요(숙박 여부)");
+    if (!["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"].includes(month)) return alert("올바른 값을 입력해주세요(여행 출발 시기)");
+    if (!["1", "2"].includes(accompany_presence)) return alert("올바른 값을 입력해주세요(동행자 정보)");
+    if (isNaN(accompany_num) || !Number.isInteger(Number(accompany_num)) || Number(accompany_num) < 0) return alert("올바른 값을 입력해주세요(동행자 정보)");
+    if (Number(accompany_num) > 0 && accompany_presence === "2") return alert("올바른 값을 입력해주세요(동행자 정보)");
+    if (Number(accompany_num) === 0 && accompany_presence === "1") return alert("올바른 값을 입력해주세요(동행자 정보)");
+    if (accompany_presence === "2") {
+      // 2 === 동행자 없음
+      if (!(accompany_relation.length === 1 && accompany_relation[0] === "0")) return alert("올바른 값을 입력해주세요(동행자 정보)");
+    } else if (accompany_presence === "1") {
+      if (!(accompany_relation.length > 0 && !accompany_relation.includes("0"))) return alert("올바른 값을 입력해주세요(동행자 정보)");
+    } else {
+      return alert("올바른 값을 입력해주세요(동행자 정보)");
+    }
+    if (activity.length === "0") return alert("올바른 값을 입력해주세요(여행지에서의 기대활동)");
+    if (!["1", "2"].includes(sex)) return alert("올바른 값을 입력해주세요(성별)");
+    if (isNaN(age) || !(0 <= Number(age) && Number(age) <= 120)) return alert("올바른 값을 입력해주세요(나이)");
+    if (!["0", "1"].includes(marriage)) return alert("올바른 값을 입력해주세요(결혼 여부)");
+
     if (!oneday || !month || !purpose || !accompany_presence || !accompany_num || !sex || !age) return alert("입력하지 않은 항목이 있습니다"); // accompany_relation, activity 는 체크 안함
 
     const converted_accompany_relation = [0, 0, 0, 0, 0, 0]; // 미성님 모델에 넣을 수 있도록 convert
