@@ -243,7 +243,6 @@ public class ItemService {
                             p.getNumber());
                 }
 
-                //List<ItemRes> itemResList = setLikesAndBookmarks(tourApiItemList, userIdx);
                 List<ItemRes> itemResList = setLikesAndBookmarks(tourApiItemListAfterApplyRatio, userIdx);
                 return DefaultRes.res(StatusCode.OK, "아이템 전체 조회 성공", itemResList);
             }
@@ -289,12 +288,20 @@ public class ItemService {
             itemRes = setLikeAndBookmark(itemRes, userIdx);
 
             itemExtraRes.setAddress(tourApiItem.getTourApiItemCommon().getAddress());
-            int start = tourApiItem.getTourApiItemCommon().getHomepageUrl().indexOf("\"");
-            String lastPhrase = tourApiItem.getTourApiItemCommon().getHomepageUrl().substring(start+1);
-            int end  = lastPhrase.indexOf("\"");
-            String parsedHomepageUrl = lastPhrase.substring(0, end);
 
-            itemExtraRes.setHomepageUrl(parsedHomepageUrl);
+            if(tourApiItem.getTourApiItemCommon().getHomepageUrl().equals("")){
+                itemExtraRes.setHomepageUrl("");
+            }
+            else{
+                int start = tourApiItem.getTourApiItemCommon().getHomepageUrl().indexOf("\"");
+
+                String lastPhrase = tourApiItem.getTourApiItemCommon().getHomepageUrl().substring(start+1);
+                int end  = lastPhrase.indexOf("\"");
+                String parsedHomepageUrl = lastPhrase.substring(0, end);
+
+                itemExtraRes.setHomepageUrl(parsedHomepageUrl);
+            }
+
             itemExtraRes.setOverview(tourApiItem.getTourApiItemCommon().getOverview()
                     .replaceAll("<br>", ""));
 
