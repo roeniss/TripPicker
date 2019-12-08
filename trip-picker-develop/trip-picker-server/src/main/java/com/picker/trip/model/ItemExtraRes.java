@@ -2,12 +2,13 @@ package com.picker.trip.model;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
-public class TourApiItemCommon {
-    private String homepageUrl;
-    private String zipCode;
-    private String overView;
+public class ItemExtraRes {
     private String address;
     private String overview;
     private String homepageUrl;
+    private List<String> subImageUrlList;
+    private List<RelatedItem> relatedItemList;
 }
