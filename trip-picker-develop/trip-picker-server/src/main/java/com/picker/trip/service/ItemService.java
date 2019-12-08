@@ -144,6 +144,8 @@ public class ItemService {
                         personalityCategoryRatioAndNumberList.get();
                 Collections.sort(pcList);
 
+                for(int i = 0; i < pcList.size(); i++) System.out.println(pcList.get(i).getCategoryCode());
+
                 List<UserPersonality> userPersonalityList =
                         userPersonalityRepository.findAllByPersonalityType(personalityType).get();
 
