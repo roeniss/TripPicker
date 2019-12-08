@@ -101,7 +101,6 @@ public class LikeService {
             personalityCategoryRepository.save(personalityCategory);
             itemLikeRepository.save(itemLike);
             itemRepository.save(item);
-
             return DefaultRes.res(StatusCode.CREATED, "좋아요 저장 성공");
         } catch (Exception e) {
             System.out.println(e);
