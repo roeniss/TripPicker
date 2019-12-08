@@ -94,18 +94,19 @@ const dummyItems = [
 
 const initialState = Map({
   loading: false,
-  id: 1, // 임시. 원래는 undefined
+  id: undefined, // 임시. 원래는 undefined
   error: "",
   page: "login",
   region: undefined, // 임시. 원래는 undefined
   personality: undefined,
   feed: [],
   favorites: [],
-  showFavorites: false
+  showFavorites: false,
+  detail: {}
 });
 
 const reducer = (state, action) => {
-  console.log(state, action);
+  console.log(state, action, action.type);
   switch (action.type) {
     case "LOGIN_TRY":
       return state
@@ -143,6 +144,11 @@ const reducer = (state, action) => {
     case "TOGGLE_SHOW_FAVORITES":
       return state.set("showFavorites", !state.get("showFavorites"));
 
+    case "UPDATE_DETAIL":
+      return state.set("detail", action.payload);
+    case "FAIL_UPDATE_DETAIL":
+      return state.set("detail", {});
+
     case "CLEAR_REGION":
       return state.set("region", undefined);
     case "CLEAR_PERSONALITY":
@@ -152,6 +158,9 @@ const reducer = (state, action) => {
       return state.set("page", "register");
     case "GOTO_LOGIN":
       return state.set("page", "login");
+
+    case "CUSTOM_ERROR":
+      return state.set("error", action.payload);
     case "CLAER_ERROR":
       return state.set("error", undefined);
     default:

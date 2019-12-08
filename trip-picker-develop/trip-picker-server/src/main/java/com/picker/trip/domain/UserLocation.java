@@ -9,7 +9,7 @@ import javax.persistence.Table;
 /**
  * UserLocation Entity Class
  */
-
+ 
 @Data
 @Entity
 @Table(name = "user_location")
@@ -17,6 +17,9 @@ public class UserLocation {
     @Id
     private int userIdx;
 
+    private int areaCode;
+    private int sggCode;
+    private String regionName;
     private String region;
     private int areaCode;
     private int sggCode;

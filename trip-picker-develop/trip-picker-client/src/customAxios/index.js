@@ -32,8 +32,10 @@ const getUrl = subject => {
       return rootUrl + "/likes/cancel";
     case "GET_FAVORITES":
       return rootUrl + "/bookmarks/";
+    case "GET_DETAIL":
+      return rootUrl + "/items/detail?isSelected=true&";
     default:
-      console.log("wrong URL call!");
+      console.log("13948614848231090001"); // wrong URL call!
       return rootUrl;
   }
 };
@@ -142,6 +144,7 @@ const getFeed = async (dispatch, data) => {
   dispatch({ type: "UPDATE_FEED", payload: payload });
   let response = await Axios.get(getUrl("GET_FEED") + data.userIdx).catch(_ => []);
   if (response.data.status === 200) feed = response.data.data;
+  console.log("fetch feed:", feed);
   payload = { feed: feed || [] };
   dispatch({ type: "UPDATE_FEED", payload: payload });
   // Below: TEST
@@ -183,6 +186,19 @@ const getFavorites = async (dispatch, data) => {
   }
 };
 
+const getDetail = async (dispatch, data) => {
+  const { userIdx, contentIdx } = data;
+  const params = `userIdx=${userIdx}&contentIdx=${contentIdx}`;
+  const response = await Axios.get(getUrl("GET_DETAIL") + params);
+  console.log(response);
+
+  if (response.data.status === 200) {
+    dispatch({ type: "UPDATE_DETAIL", payload: response.data.data });
+  } else {
+    dispatch({ type: "FAIL_UPDATE_DETAIL" });
+  }
+};
+
 const axios = (action, dispatch, data) => {
   switch (action) {
     case "LOGIN":
@@ -211,6 +227,8 @@ const axios = (action, dispatch, data) => {
       return removeLike(dispatch, data);
     case "GET_FAVORITES":
       return getFavorites(dispatch, data);
+    case "GET_DETAIL":
+      return getDetail(dispatch, data);
     default:
       return;
   }

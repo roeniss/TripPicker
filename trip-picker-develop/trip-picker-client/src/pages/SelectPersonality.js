@@ -17,10 +17,10 @@ const SelectPersonality = () => {
   return (
     <div>
       <SelectPersonalityForm onSubmit={onSubmitHandler}>
-        <h1>회원님의 {"<퍼스널리티>"}를 선택해 주세요</h1>
+        <h1>회원님의 {"<여행 스타일>"}를 선택해 주세요</h1>
         <select name="personality" id="personality" value={personality} onChange={e => setPersonality(e.target.value)}>
           <option value="NATURE_PERSONAL">자연속의 나</option>
-          <option value="EXTREME_PERSONAL">짜릿함</option>
+          <option value="EXTREME_PERSONAL">활동적인</option>
           <option value="CULTURE_PERSONAL">문화생활</option>
           <option value="FAMILY_PERSONAL">가족여행</option>
         </select>
