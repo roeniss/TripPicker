@@ -25,4 +25,7 @@ public class ItemLike {
 
     private String imageUrl;
     private String title;
+
+    private int areaCode;
+    private int sggCode;
 }
