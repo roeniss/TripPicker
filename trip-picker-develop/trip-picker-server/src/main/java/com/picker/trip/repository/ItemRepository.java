@@ -7,7 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 public interface ItemRepository  extends JpaRepository<Item, Integer> {
-    Optional<Item> findByContentIdx(int userIdx);
+    Optional<Item> findByContentIdx(int contentIdx);
+    Optional<Item> findByContentIdxAndAreaCodeAndSggCode(int contentIdx,
+                                                         int areaCode, int sggCode);
 
     @Transactional
     void deleteByContentIdx(int contentIdx);
