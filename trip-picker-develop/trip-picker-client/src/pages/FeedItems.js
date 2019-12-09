@@ -3,6 +3,7 @@ import { DispatchContext, StateContext } from "../App";
 import styled from "styled-components";
 import { axios } from "../customAxios";
 import Detail from "../modals/Detail";
+import CategoryRankingUI from "../modals/CategoryRankingUI";
 import BookmarkIcon from "../components/BookmarkIcon";
 import LikeIcon from "../components/LikeIcon";
 import getRegionCodeByName from "../helper/getRegionCodeByName";
@@ -77,12 +78,11 @@ const FeedItems = () => {
       );
 
     let data;
-    if (state.get("showFavorites")) data = state.get("favorites");
-    else data = state.get("feed");
-
-    if (data.length === 0) {
-      return <h2>현재 즐겨찾기에 담긴 아이템이 없습니다.</h2>;
-    }
+    if (state.get("showFavorites")) {
+      data = state.get("favorites");
+      if (data === null) return <h2>서버로부터 데이터를 수집하는 중입니다.</h2>;
+      else if (data.length === 0) return <h2>현재 즐겨찾기에 담긴 아이템이 없습니다.</h2>;
+    } else data = state.get("feed");
 
     return data.map((item, _index) => {
       const key = state.get("showFavorites") + item.contentIdx;
@@ -113,6 +113,7 @@ const FeedItems = () => {
 
   return (
     <>
+      <CategoryRankingUI />
       {detail ? <Detail contentIdx={detail} closeModal={closeModal} userIdx={state.get("id") || 1} /> : null}
       <div>현재 선택된 지역: {state.get("region")}</div>
       <div>현재 선택된 퍼소널리티 : {convertPersonalityToKorean(state.get("personality"))}</div>

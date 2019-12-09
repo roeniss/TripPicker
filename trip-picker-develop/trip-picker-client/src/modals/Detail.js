@@ -16,6 +16,7 @@ const Detail = ({ contentIdx, userIdx, closeModal }) => {
   const state = useContext(StateContext);
   const dispatch = useContext(DispatchContext);
 
+  /*
   const fetchFailhandling = () =>
     // error handling
     setTimeout(() => {
@@ -23,12 +24,13 @@ const Detail = ({ contentIdx, userIdx, closeModal }) => {
         dispatch({ type: "CUSTOM_ERROR", payload: "현재 서버 접속이 원활하지 않습니다. 잠시 후 다시 시도해주세요." });
       }
     }, 10000);
+  */
 
   const getDetailContent = (userIdx, contentIdx) => {
     const params = `userIdx=${userIdx}&contentIdx=${contentIdx}`;
-    console.log("http://13.125.191.60:8080/items/detail?isSelected=true&" + params);
     Axios.get("http://13.125.191.60:8080/items/detail?isSelected=true&" + params).then(({ data }) => {
       setItem(data.data);
+      console.log("?", data.data);
     });
     // fetchFailhandling();
   };
@@ -36,16 +38,19 @@ const Detail = ({ contentIdx, userIdx, closeModal }) => {
   useEffect(() => {
     getDetailContent(userIdx, contentIdx);
 
+    // Below: Test
+    // setItem({ aa: 123 });
+
+    /* 
     const preventWheel = e => {
       e.preventDefault();
       e.stopPropagation();
     };
     document.addEventListener("wheel", preventWheel);
-    // Below: Test
-    // setItem({ aa: 123 });
     return () => {
       document.removeEventListener("wheel", preventWheel);
     };
+    */
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -62,7 +67,7 @@ const Detail = ({ contentIdx, userIdx, closeModal }) => {
     </a>
   );
 
-  const getImages = imageLinks => imageLinks.map(link => <div key={link} style={{ backgroundImage: `url(${link})` }}></div>);
+  const getImages = imageLinks => (imageLinks.length ? imageLinks.map(link => <div key={link} style={{ backgroundImage: `url(${link})` }}></div>) : <div></div>);
 
   const toggleFavorite = (e, item) => {
     e.preventDefault();
@@ -138,7 +143,7 @@ const Detail = ({ contentIdx, userIdx, closeModal }) => {
     }
   };
 
-  console.log(item);
+  // console.log(item);
 
   return ReactDOM.createPortal(
     <DetailModal id="detail-modal-container" onClick={e => closeModal(e)}>
