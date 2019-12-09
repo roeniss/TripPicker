@@ -5,7 +5,7 @@ import lombok.Data;
 import javax.persistence.*;
 
 /**
- * Created By yw on 2019-09-19.
+ * UserPreference Entity Class
  */
 
 @Data
@@ -15,9 +15,9 @@ public class UserPreference {
     @Id
     private int userIdx;
 
+    private String region;
     private int areaCode;
     private int sggCode;
-    private String regionName;
 }
 
 
