@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { DispatchContext } from "../App";
 import useInputState from "../hooks/useInputState";
 import { axios } from "../customAxios";
+import styled from "styled-components";
 
 const Register = () => {
   const [email, emailBind] = useInputState("");
@@ -19,55 +20,72 @@ const Register = () => {
   };
 
   return (
-    <div>
-      <h1>회원가입화면 (Register) </h1>
+    <>
+      <Blank />
+      <RegisterForm>
+        <h1>회원가입</h1>
 
-      <form onSubmit={onSubmitHandler}>
-        <div>
-          <label htmlFor="email">email</label>
-          <input type="text" {...emailBind} />
-        </div>
-        <div>
-          <label htmlFor="password">password</label>
-          <input type="text" {...passwordBind} />
-        </div>
-        <div>
-          <label htmlFor="passwordConfirm">passwordConfirm</label>
-          <input type="text" {...passwordConfirmBind} />
-        </div>
-        <div>
-          <label htmlFor="name">name</label>
-          <input type="text" {...nameBind} />
-        </div>
-        {/* <div>
-          <label htmlFor=""></label>
-          <input type="text" />
-        </div>
-        <div>
-          <label htmlFor=""></label>
-          <input type="text" />
-        </div>
-        <div>
-          <label htmlFor=""></label>
-          <input type="text" />
-        </div>
-        <div>
-          <label htmlFor=""></label>
-          <input type="text" />
-        </div>
-        <div>
-          <label htmlFor=""></label>
-          <input type="text" />
-        </div>
-        <div>
-          <label htmlFor=""></label>
-          <input type="text" />
-        </div> */}
-        <button>회원가입</button>
-      </form>
-      <button onClick={_ => dispatch({ type: "GOTO_LOGIN" })}>로그인 화면으로 돌아가기</button>
-    </div>
+        <form onSubmit={onSubmitHandler}>
+          <div>
+            <label htmlFor="email">이메일</label> <br />
+            <input type="text" {...emailBind} />
+          </div>
+          <div>
+            <label htmlFor="password">비밀번호</label> <br />
+            <input type="password" {...passwordBind} />
+          </div>
+          <div>
+            <label htmlFor="passwordConfirm">비밀번호(다시)</label> <br />
+            <input type="password" {...passwordConfirmBind} />
+          </div>
+          <div>
+            <label htmlFor="name">이름</label> <br />
+            <input type="text" {...nameBind} />
+          </div>
+          <button id="register-btn">회원가입</button>
+        </form>
+        <button id="goto-login-btn" onClick={_ => dispatch({ type: "GOTO_LOGIN" })}>
+          로그인 화면으로 돌아가기
+        </button>
+      </RegisterForm>
+    </>
   );
 };
 
 export default Register;
+
+const RegisterForm = styled.div`
+  margin-top: 100px;
+  padding-top:10px;
+  margin: 30px 0
+  margin: 0 auto;
+  width: 400px;
+  background-color: skyblue;
+  border-radius: 10px; 
+
+  div {
+    padding-bottom: 20px;
+    text-align: center;
+  }
+  button {
+    margin-bottom:10px
+    border-radius: 5px;
+    width: 150px;
+    padding:10px 0 ;
+  }
+  
+    button{
+      cursor:pointer
+    }
+
+  #register-btn {
+    background-color: pink;
+  }
+  #goto-login-btn {
+    background-color: gray;
+  }
+`;
+
+const Blank = styled.div`
+  height: 100px;
+`;
