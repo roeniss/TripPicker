@@ -22,14 +22,19 @@ const FeedItems = () => {
       axios("REMOVE_FAVORITE", dispatch, data);
       e.target.classList.remove("fas");
       e.target.classList.add("far");
+      // if (state.get("showFavorites")) {
+      // const updatedFavorites = state.get("favorites").filter(each => each.contentIdx !== item.contentIdx);
+      // dispatch({ type: "UPDATE_FAVORITES", payload: updatedFavorites });
+      // }
     } else {
       axios("ADD_FAVORITE", dispatch, data);
       e.target.classList.add("fas");
       e.target.classList.remove("far");
-    }
-    if (state.get("showFavorites")) {
-      const updatedFavorites = state.get("favorites").filter(each => each.contentIdx !== item.contentIdx);
-      dispatch({ type: "UPDATE_FAVORITES", payload: updatedFavorites });
+      // if (!state.get("showFavorites")) {
+      // const updatedFavorites = state.get("favorites");
+      // updatedFavorites.push(item);
+      // dispatch({ type: "UPDATE_FAVORITES", payload: updatedFavorites });
+      // }
     }
   };
 
@@ -63,7 +68,7 @@ const FeedItems = () => {
     setDetail(false);
   };
 
-  const items = () => {
+  const makeItemElements = () => {
     if (state.get("feed").length === 0)
       return (
         <Loading>
@@ -74,6 +79,10 @@ const FeedItems = () => {
     let data;
     if (state.get("showFavorites")) data = state.get("favorites");
     else data = state.get("feed");
+
+    if (data.length === 0) {
+      return <h2>현재 즐겨찾기에 담긴 아이템이 없습니다.</h2>;
+    }
 
     return data.map((item, _index) => {
       const key = state.get("showFavorites") + item.contentIdx;
@@ -88,7 +97,7 @@ const FeedItems = () => {
     });
   };
 
-  const convertPersonalityToKoren = personality => {
+  const convertPersonalityToKorean = personality => {
     switch (personality) {
       case "NATURE_PERSONAL":
         return "자연속의 나";
@@ -106,8 +115,8 @@ const FeedItems = () => {
     <>
       {detail ? <Detail contentIdx={detail} closeModal={closeModal} userIdx={state.get("id") || 1} /> : null}
       <div>현재 선택된 지역: {state.get("region")}</div>
-      <div>현재 선택된 퍼소널리티 : {convertPersonalityToKoren()}</div>
-      <FlexParent>{items()}</FlexParent>
+      <div>현재 선택된 퍼소널리티 : {convertPersonalityToKorean(state.get("personality"))}</div>
+      <FlexParent>{makeItemElements()}</FlexParent>
     </>
   );
 };
