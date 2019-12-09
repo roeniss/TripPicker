@@ -16,7 +16,8 @@ const initialState = Map({
 });
 
 const reducer = (state, action) => {
-  console.log(state, action, action.type);
+  // console.log(state, action, action.type);
+  console.log("reduce: ", action.type);
   switch (action.type) {
     case "LOGIN_TRY":
       return state

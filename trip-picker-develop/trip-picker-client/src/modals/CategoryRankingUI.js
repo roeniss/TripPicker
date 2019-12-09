@@ -5,8 +5,6 @@ import { DispatchContext, StateContext } from "../App";
 
 const modalElem = document.getElementById("rank-modal");
 const CategoryRankingUI = () => {
-  console.log("?");
-
   const dispatch = useContext(DispatchContext);
   const state = useContext(StateContext);
 
