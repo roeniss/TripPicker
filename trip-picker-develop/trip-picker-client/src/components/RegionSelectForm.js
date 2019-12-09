@@ -79,7 +79,7 @@ const RegionSelectForm = () => {
     const idx = options.indexOf(selectedOption[0]);
     if (idx > -1) options.splice(idx, 1);
     else options.push(selectedOption[0]);
-    // WARNING: accompany의 경우, 동행자 없음을 직접 눌러서 해제해야하는 이슈가 있음. 최소 1개 이상이 선택되어있도록 Select DOM이 설계된 듯. (전체 선택 해제가 안됨...)
+
     setAccompany_relation(options);
   };
 
@@ -90,6 +90,14 @@ const RegionSelectForm = () => {
     if (idx > -1) options.splice(idx, 1);
     else options.push(selectedOption[0]);
     setActivity(options);
+  };
+
+  const onChangeHandler3 = e => {
+    setAccompany_presence(e.target.value);
+    if (e.target.value === "2") {
+      e.target.value = "0";
+      accompany_numBind.onChange(e);
+    }
   };
 
   if (submitSwitch)
@@ -139,7 +147,7 @@ const RegionSelectForm = () => {
         <div>
           <label htmlFor="accompany_presence"></label>동행자 유무
           <br />
-          <select name="accompany_presence" onChange={e => setAccompany_presence(e.target.value)} id="accompany_presence" value={accompany_presence}>
+          <select name="accompany_presence" onChange={onChangeHandler3} id="accompany_presence" value={accompany_presence}>
             <option value="0"></option>
             <option value="1">동행자 있음</option>
             <option value="2">동행자 없음</option>
@@ -159,7 +167,7 @@ const RegionSelectForm = () => {
             <option value="2">직장 동료</option>
             <option value="3">단체/모임</option>
             <option value="4">비동거가족</option>
-            <option value="5">친척</option>
+            <option value="5">친척</option>``
             <option value="6">기타</option>
           </select>
         </div>

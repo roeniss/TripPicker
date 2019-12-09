@@ -3,8 +3,10 @@ import { DispatchContext, StateContext } from "../App";
 import styled from "styled-components";
 import { axios } from "../customAxios";
 import Detail from "../modals/Detail";
+import CategoryRankingUI from "../modals/CategoryRankingUI";
 import BookmarkIcon from "../components/BookmarkIcon";
 import LikeIcon from "../components/LikeIcon";
+import getRegionCodeByName from "../helper/getRegionCodeByName";
 
 const FeedItems = () => {
   const [detail, setDetail] = useState(false);
@@ -21,10 +23,19 @@ const FeedItems = () => {
       axios("REMOVE_FAVORITE", dispatch, data);
       e.target.classList.remove("fas");
       e.target.classList.add("far");
+      // if (state.get("showFavorites")) {
+      // const updatedFavorites = state.get("favorites").filter(each => each.contentIdx !== item.contentIdx);
+      // dispatch({ type: "UPDATE_FAVORITES", payload: updatedFavorites });
+      // }
     } else {
       axios("ADD_FAVORITE", dispatch, data);
       e.target.classList.add("fas");
       e.target.classList.remove("far");
+      // if (!state.get("showFavorites")) {
+      // const updatedFavorites = state.get("favorites");
+      // updatedFavorites.push(item);
+      // dispatch({ type: "UPDATE_FAVORITES", payload: updatedFavorites });
+      // }
     }
   };
 
@@ -32,7 +43,8 @@ const FeedItems = () => {
     e.preventDefault();
     e.stopPropagation();
     const { contentIdx, categoryCode, subCategoryCode, title, imageUrl } = item;
-    const data = { userIdx: state.get("id"), contentIdx, categoryCode, subCategoryCode, title, imageUrl };
+    const [areaCode, sggCode] = getRegionCodeByName(state.get("region"));
+    const data = { userIdx: state.get("id"), contentIdx, categoryCode, subCategoryCode, title, imageUrl, areaCode, sggCode };
     if (e.target.classList.contains("fas")) {
       axios("REMOVE_LIKE", dispatch, data);
       e.target.classList.remove("fas");
@@ -57,7 +69,7 @@ const FeedItems = () => {
     setDetail(false);
   };
 
-  const items = () => {
+  const makeItemElements = () => {
     if (state.get("feed").length === 0)
       return (
         <Loading>
@@ -66,8 +78,11 @@ const FeedItems = () => {
       );
 
     let data;
-    if (state.get("showFavorites")) data = state.get("favorites");
-    else data = state.get("feed");
+    if (state.get("showFavorites")) {
+      data = state.get("favorites");
+      if (data === null) return <h2>서버로부터 데이터를 수집하는 중입니다.</h2>;
+      else if (data.length === 0) return <h2>현재 즐겨찾기에 담긴 아이템이 없습니다.</h2>;
+    } else data = state.get("feed");
 
     return data.map((item, _index) => {
       const key = state.get("showFavorites") + item.contentIdx;
@@ -82,7 +97,7 @@ const FeedItems = () => {
     });
   };
 
-  const convertPersonalityToKoren = personality => {
+  const convertPersonalityToKorean = personality => {
     switch (personality) {
       case "NATURE_PERSONAL":
         return "자연속의 나";
@@ -98,10 +113,11 @@ const FeedItems = () => {
 
   return (
     <>
+      <CategoryRankingUI />
       {detail ? <Detail contentIdx={detail} closeModal={closeModal} userIdx={state.get("id") || 1} /> : null}
       <div>현재 선택된 지역: {state.get("region")}</div>
-      <div>현재 선택된 퍼소널리티 : {convertPersonalityToKoren()}</div>
-      <FlexParent>{items()}</FlexParent>
+      <div>현재 선택된 퍼소널리티 : {convertPersonalityToKorean(state.get("personality"))}</div>
+      <FlexParent>{makeItemElements()}</FlexParent>
     </>
   );
 };

@@ -6,6 +6,7 @@ import LikeIcon from "../components/LikeIcon";
 import { StateContext, DispatchContext } from "../App";
 import { axios } from "../customAxios";
 import Axios from "axios";
+import getRegionCodeByName from "../helper/getRegionCodeByName";
 
 const detailModalElem = document.getElementById("detail-modal");
 
@@ -15,6 +16,7 @@ const Detail = ({ contentIdx, userIdx, closeModal }) => {
   const state = useContext(StateContext);
   const dispatch = useContext(DispatchContext);
 
+  /*
   const fetchFailhandling = () =>
     // error handling
     setTimeout(() => {
@@ -22,13 +24,13 @@ const Detail = ({ contentIdx, userIdx, closeModal }) => {
         dispatch({ type: "CUSTOM_ERROR", payload: "현재 서버 접속이 원활하지 않습니다. 잠시 후 다시 시도해주세요." });
       }
     }, 10000);
+  */
 
   const getDetailContent = (userIdx, contentIdx) => {
-    console.log(userIdx, contentIdx);
-
     const params = `userIdx=${userIdx}&contentIdx=${contentIdx}`;
     Axios.get("http://13.125.191.60:8080/items/detail?isSelected=true&" + params).then(({ data }) => {
       setItem(data.data);
+      console.log("?", data.data);
     });
     // fetchFailhandling();
   };
@@ -36,16 +38,19 @@ const Detail = ({ contentIdx, userIdx, closeModal }) => {
   useEffect(() => {
     getDetailContent(userIdx, contentIdx);
 
+    // Below: Test
+    // setItem({ aa: 123 });
+
+    /* 
     const preventWheel = e => {
       e.preventDefault();
       e.stopPropagation();
     };
     document.addEventListener("wheel", preventWheel);
-    // Below: Test
-    // setItem({ aa: 123 });
     return () => {
       document.removeEventListener("wheel", preventWheel);
     };
+    */
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -62,7 +67,7 @@ const Detail = ({ contentIdx, userIdx, closeModal }) => {
     </a>
   );
 
-  const getImages = imageLinks => imageLinks.map(link => <div key={link} style={{ backgroundImage: `url(${link})` }}></div>);
+  const getImages = imageLinks => (imageLinks.length ? imageLinks.map(link => <div key={link} style={{ backgroundImage: `url(${link})` }}></div>) : <div></div>);
 
   const toggleFavorite = (e, item) => {
     e.preventDefault();
@@ -83,8 +88,9 @@ const Detail = ({ contentIdx, userIdx, closeModal }) => {
   const toggleLike = (e, item) => {
     e.preventDefault();
     e.stopPropagation();
+    const [areaCode, sggCode] = getRegionCodeByName(state.get("region"));
     const { contentIdx, categoryCode, subCategoryCode, title, imageUrl } = item;
-    const data = { userIdx: state.get("id"), contentIdx, categoryCode, subCategoryCode, title, imageUrl };
+    const data = { userIdx: state.get("id"), contentIdx, categoryCode, subCategoryCode, title, imageUrl, areaCode, sggCode };
     if (e.target.classList.contains("fas")) {
       axios("REMOVE_LIKE", dispatch, data);
       e.target.classList.remove("fas");
@@ -137,7 +143,7 @@ const Detail = ({ contentIdx, userIdx, closeModal }) => {
     }
   };
 
-  console.log(item);
+  // console.log(item);
 
   return ReactDOM.createPortal(
     <DetailModal id="detail-modal-container" onClick={e => closeModal(e)}>

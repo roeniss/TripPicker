@@ -137,14 +137,14 @@ const updatePersonality = async (dispatch, data) => {
 };
 
 const getFeed = async (dispatch, data) => {
+  dispatch({ type: "UPDATE_FEED", payload: { feed: { itemResList: [], popularCategoryList: [] } } });
   // 기능 체크 완료
   // 1. 전체 (내 퍼소널리티에 맞는) 아이템들
   let feed, likes, favorites;
   let payload = { feed: feed || [], favorites: favorites || [], likes: likes || [] }; // 로딩 화면을 보여주기 위해
-  dispatch({ type: "UPDATE_FEED", payload: payload });
   let response = await Axios.get(getUrl("GET_FEED") + data.userIdx).catch(_ => []);
   if (response.data.status === 200) feed = response.data.data;
-  console.log("fetch feed:", feed);
+  // console.log("fetch feed:", feed);
   payload = { feed: feed || [] };
   dispatch({ type: "UPDATE_FEED", payload: payload });
   // Below: TEST
@@ -180,18 +180,20 @@ const removeLike = async (dispatch, data) => {
 
 const getFavorites = async (dispatch, data) => {
   // 기능 체크 완료
+  dispatch({ type: "UPDATE_FAVORITES", payload: null });
   const response = await Axios.get(getUrl("GET_FAVORITES") + data.userIdx);
   if (response.data.status === 200) {
     dispatch({ type: "UPDATE_FAVORITES", payload: response.data.data });
+  } else {
+    dispatch({ type: "UPDATE_FAVORITES", payload: [] });
   }
 };
 
 const getDetail = async (dispatch, data) => {
+  // 기능 체크 완료
   const { userIdx, contentIdx } = data;
   const params = `userIdx=${userIdx}&contentIdx=${contentIdx}`;
   const response = await Axios.get(getUrl("GET_DETAIL") + params);
-  console.log(response);
-
   if (response.data.status === 200) {
     dispatch({ type: "UPDATE_DETAIL", payload: response.data.data });
   } else {
