@@ -144,7 +144,7 @@ const getFeed = async (dispatch, data) => {
   dispatch({ type: "UPDATE_FEED", payload: payload });
   let response = await Axios.get(getUrl("GET_FEED") + data.userIdx).catch(_ => []);
   if (response.data.status === 200) feed = response.data.data;
-  console.log("fetch feed:", feed);
+  // console.log("fetch feed:", feed);
   payload = { feed: feed || [] };
   dispatch({ type: "UPDATE_FEED", payload: payload });
   // Below: TEST

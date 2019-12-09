@@ -6,6 +6,7 @@ import LikeIcon from "../components/LikeIcon";
 import { StateContext, DispatchContext } from "../App";
 import { axios } from "../customAxios";
 import Axios from "axios";
+import getRegionCodeByName from "../helper/getRegionCodeByName";
 
 const detailModalElem = document.getElementById("detail-modal");
 
@@ -24,9 +25,8 @@ const Detail = ({ contentIdx, userIdx, closeModal }) => {
     }, 10000);
 
   const getDetailContent = (userIdx, contentIdx) => {
-    console.log(userIdx, contentIdx);
-
     const params = `userIdx=${userIdx}&contentIdx=${contentIdx}`;
+    console.log("http://13.125.191.60:8080/items/detail?isSelected=true&" + params);
     Axios.get("http://13.125.191.60:8080/items/detail?isSelected=true&" + params).then(({ data }) => {
       setItem(data.data);
     });
@@ -83,8 +83,9 @@ const Detail = ({ contentIdx, userIdx, closeModal }) => {
   const toggleLike = (e, item) => {
     e.preventDefault();
     e.stopPropagation();
+    const [areaCode, sggCode] = getRegionCodeByName(state.get("region"));
     const { contentIdx, categoryCode, subCategoryCode, title, imageUrl } = item;
-    const data = { userIdx: state.get("id"), contentIdx, categoryCode, subCategoryCode, title, imageUrl };
+    const data = { userIdx: state.get("id"), contentIdx, categoryCode, subCategoryCode, title, imageUrl, areaCode, sggCode };
     if (e.target.classList.contains("fas")) {
       axios("REMOVE_LIKE", dispatch, data);
       e.target.classList.remove("fas");

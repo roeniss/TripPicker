@@ -5,6 +5,7 @@ import { axios } from "../customAxios";
 import Detail from "../modals/Detail";
 import BookmarkIcon from "../components/BookmarkIcon";
 import LikeIcon from "../components/LikeIcon";
+import getRegionCodeByName from "../helper/getRegionCodeByName";
 
 const FeedItems = () => {
   const [detail, setDetail] = useState(false);
@@ -26,13 +27,18 @@ const FeedItems = () => {
       e.target.classList.add("fas");
       e.target.classList.remove("far");
     }
+    if (state.get("showFavorites")) {
+      const updatedFavorites = state.get("favorites").filter(each => each.contentIdx !== item.contentIdx);
+      dispatch({ type: "UPDATE_FAVORITES", payload: updatedFavorites });
+    }
   };
 
   const toggleLike = (e, item) => {
     e.preventDefault();
     e.stopPropagation();
     const { contentIdx, categoryCode, subCategoryCode, title, imageUrl } = item;
-    const data = { userIdx: state.get("id"), contentIdx, categoryCode, subCategoryCode, title, imageUrl };
+    const [areaCode, sggCode] = getRegionCodeByName(state.get("region"));
+    const data = { userIdx: state.get("id"), contentIdx, categoryCode, subCategoryCode, title, imageUrl, areaCode, sggCode };
     if (e.target.classList.contains("fas")) {
       axios("REMOVE_LIKE", dispatch, data);
       e.target.classList.remove("fas");
