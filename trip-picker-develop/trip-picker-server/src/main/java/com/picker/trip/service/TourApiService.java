@@ -22,8 +22,8 @@ import java.util.Set;
 @Service
 public class TourApiService {
 
-    //private final String serviceKey = "FCP2QZqd3Gp4WgFjf6p72gznY9WKTFusvefoLCiMwtOO1nwhbOWw%2FeG62h1ArYKKEn0cSKDbeE6ZznAEsDsT9w%3D%3D";
-    private final String serviceKey = "429MTGfQPNf9b73dIIagzdyia3O%2FE3sBM4wKb0CyVXFTO9ledy4R22P3w%2BoUUKcKcUB9SmHTT2fWYggGfPzo%2Fw%3D%3D";
+    private final String serviceKey = "FCP2QZqd3Gp4WgFjf6p72gznY9WKTFusvefoLCiMwtOO1nwhbOWw%2FeG62h1ArYKKEn0cSKDbeE6ZznAEsDsT9w%3D%3D";
+    //private final String serviceKey = "429MTGfQPNf9b73dIIagzdyia3O%2FE3sBM4wKb0CyVXFTO9ledy4R22P3w%2BoUUKcKcUB9SmHTT2fWYggGfPzo%2Fw%3D%3D";
 
     /**
      * 관광 정보 API 호출
@@ -93,6 +93,8 @@ public class TourApiService {
                 tourApiItem.setCategoryCode(categoryCode);
                 tourApiItem.setSubCategoryCode(subCategoryCode);
                 tourApiItem.setImageUrl(imageUrl);
+                tourApiItem.setAreaCode(areaCode);
+                tourApiItem.setSggCode(sggCode);
 
                 tourApiItemList.add(tourApiItem);
             }
@@ -204,6 +206,8 @@ public class TourApiService {
 
             tourApiItem.setContentIdx(jsonObjectFinal.getInt("contentid"));
             tourApiItem.setTitle(jsonObjectFinal.getString("title"));
+            tourApiItem.setAreaCode(jsonObjectFinal.getInt("areacode"));
+            tourApiItem.setSggCode(jsonObjectFinal.getInt("sigungucode"));
 
             if(jsonObjectFinal.isNull("firstimage")) tourApiItem.setImageUrl("");
             else tourApiItem.setImageUrl(jsonObjectFinal.getString("firstimage"));

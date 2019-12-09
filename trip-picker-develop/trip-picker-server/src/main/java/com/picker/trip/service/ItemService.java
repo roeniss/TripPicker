@@ -26,43 +26,7 @@ public class ItemService {
     private final ItemRepository itemRepository;
 
     private final int TOTAL_NUM_OF_ITEMS = 100;
-    private final List<String> categoryCodeList = new ArrayList<>(
-            Arrays.asList("A0101", "A0201", "A0202", "A0203", "A0204", "A0205", "A0206", "A0207", "A0208"
-                    , "A0302", "A0303", "A0304", "A0305"
-                    , "A0401", "A0502"));
 
-    private static Map<CustomCategoryType, ArrayList<String>> categoryCodeMap = new HashMap() {{
-        put(CustomCategoryType.NATURE, new ArrayList<>(
-                Arrays.asList("A0101", "A0102")
-        ));
-        put(CustomCategoryType.HISTORY, new ArrayList<>(
-                Arrays.asList("A0201")
-        ));
-        put(CustomCategoryType.REST, new ArrayList<>(
-                Arrays.asList("A0202")
-        ));
-        put(CustomCategoryType.EXPERIENCE, new ArrayList<>(
-                Arrays.asList("A0203")
-        ));
-        put(CustomCategoryType.INDUSTRY, new ArrayList<>(
-                Arrays.asList("A0204", "A0205")
-        ));
-        put(CustomCategoryType.CULTURE, new ArrayList<>(
-                Arrays.asList("A0206")
-        ));
-        put(CustomCategoryType.FESTIVAL, new ArrayList<>(
-                Arrays.asList("A0207", "A0208")
-        ));
-        put(CustomCategoryType.REPORTS, new ArrayList<>(
-                Arrays.asList("A0302", "A0303", "A0304", "A0305")
-        ));
-        put(CustomCategoryType.SHOPPING, new ArrayList<>(
-                Arrays.asList("A0401")
-        ));
-        put(CustomCategoryType.RESTAURANT, new ArrayList<>(
-                Arrays.asList("A0502")
-        ));
-    }};
 
 
     public ItemService(final TourApiService tourApiService,
@@ -90,7 +54,7 @@ public class ItemService {
      *
      * @return
      */
-    public DefaultRes<List<ItemRes>> findAllItems(final int userIdx, final boolean isSelected) {
+    public DefaultRes<ItemAllRes> findAllItems(final int userIdx, final boolean isSelected) {
         try {
             int areaCode, sggCode;
 
@@ -111,11 +75,12 @@ public class ItemService {
             Optional<List<PersonalityCategoryRatioAndNumber>> personalityCategoryRatioAndNumberList =
                     findAllCategoryRatioAndNumberByPersonalityType(personalityType);
 
+            ItemAllRes itemAllRes = new ItemAllRes();
+
             // 반영 비율 및 개수를 계산 할 수 없을 때
             if (!personalityCategoryRatioAndNumberList.isPresent()) {
                 List<TourApiItem> tourApiItemList =
                         tourApiService.findAllData(areaCode, sggCode);
-
                 List<ItemRes> itemResList = new ArrayList<>();
                 for(int i = 0; i < tourApiItemList.size(); i++){
                     TourApiItem tourApiItem = tourApiItemList.get(i);
@@ -126,6 +91,8 @@ public class ItemService {
                     itemRes.setSubCategoryCode(tourApiItem.getSubCategoryCode());
                     itemRes.setTitle(tourApiItem.getTitle());
                     itemRes.setContentIdx(tourApiItem.getContentIdx());
+                    itemRes.setAreaCode(areaCode);
+                    itemRes.setSggCode(sggCode);
 
                     itemResList.add(itemRes);
                 }
@@ -133,9 +100,22 @@ public class ItemService {
 
                 List<ItemRes> itemResListAfterSetLikesAndBookmarks =
                         setLikesAndBookmarks(itemResList, userIdx);
+                itemAllRes.setItemResList(itemResListAfterSetLikesAndBookmarks);
+                List<CategoryAndRatio>categoryAndRatioList = new ArrayList<>();
+                List<CustomCategoryType> customCategoryTypeList =
+                        new ArrayList<>(Arrays.asList(CustomCategoryType.FESTIVAL, CustomCategoryType.REST,
+                                CustomCategoryType.EXPERIENCE, CustomCategoryType.CULTURE));
+                for(int i = 0; i < 4; i++){
+                    CategoryAndRatio categoryAndRatio = new CategoryAndRatio();
+                    categoryAndRatio.setCustomCategoryType(customCategoryTypeList.get(i));
+                    categoryAndRatio.setRatio(0.10);
+                    categoryAndRatioList.add(categoryAndRatio);
+                }
+                itemAllRes.setPopularCategoryList(categoryAndRatioList);
+
 
                 return DefaultRes.res(StatusCode.OK, "아이템 전체 조회 성공",
-                        itemResListAfterSetLikesAndBookmarks);
+                        itemAllRes);
             }
 
             // 반영 비율 및 개수를 계산 할 수 있을 때
@@ -144,8 +124,10 @@ public class ItemService {
                         personalityCategoryRatioAndNumberList.get();
                 Collections.sort(pcList);
 
+
                 List<UserPersonality> userPersonalityList =
                         userPersonalityRepository.findAllByPersonalityType(personalityType).get();
+
 
                 List<Integer> userIdxList = new ArrayList<>();
                 for (UserPersonality upl : userPersonalityList) {
@@ -156,17 +138,22 @@ public class ItemService {
                 for (Integer id : userIdxList) {
                     for (PersonalityCategoryRatioAndNumber pcrn : pcList) {
                         Optional<List<ItemLike>> itemLikeTempList =
-                                itemLikeRepository.findAllByUserIdxAndCategoryCode(id.intValue(), pcrn.getCategoryCode());
-                        if (!itemLikeTempList.isPresent()) continue;
+                                itemLikeRepository.findAllByUserIdxAndCategoryCodeAndAreaCodeAndSggCode
+                                        (id.intValue(), pcrn.getCategoryCode(),
+                                                areaCode, sggCode);
+                        if (!itemLikeTempList.isPresent() || itemLikeTempList.get().size() == 0) continue;
                         itemLikeList.addAll(itemLikeTempList.get());
                     }
                 }
 
-
                 List<Item> itemList = new ArrayList<>();
                 for (ItemLike itemLike : itemLikeList) {
-                    itemList.add(itemRepository.findByContentIdx(itemLike.getContentIdx()).get());
+                    if(itemRepository.findByContentIdxAndAreaCodeAndSggCode(itemLike.getContentIdx(),
+                            areaCode, sggCode).isPresent())
+                        itemList.add(itemRepository.findByContentIdxAndAreaCodeAndSggCode
+                                (itemLike.getContentIdx(), areaCode, sggCode).get());
                 }
+
 
                 // 반영 비율 적용해서 최종적으로 리턴할 아이템 리스트
                 List<ItemRes> tourApiItemListAfterApplyRatio = new ArrayList<>();
@@ -185,6 +172,9 @@ public class ItemService {
                             itemRes.setSubCategoryCode(item.getSubCategoryCode());
                             itemRes.setImageUrl(item.getImageUrl());
                             itemRes.setTitle(item.getTitle());
+                            itemRes.setCategoryOrder(k);
+                            itemRes.setAreaCode(item.getAreaCode());
+                            itemRes.setSggCode(item.getSggCode());
 
                             tourApiItemListAfterApplyRatio.add(itemRes);
                             pcList.get(k).setStackedNumber(pcList.get(k).getStackedNumber() + 1);
@@ -193,6 +183,8 @@ public class ItemService {
                     }
                 }
 
+                Collections.sort(tourApiItemListAfterApplyRatio);
+
 
                 System.out.println("------------------ (1) 좋아요 받은 아이템  ------------------");
                 for (PersonalityCategoryRatioAndNumber p : pcList) {
@@ -200,9 +192,10 @@ public class ItemService {
                             p.getNumber());
                 }
 
-                //여기까지//
                 List<TourApiItem> tourApiItemList =
                         tourApiService.findAllData(areaCode, sggCode);
+
+                List <ItemRes> tourApiItemListAfterApplyRatioTemp = new ArrayList<>();
 
                 for (int j = 0; j < tourApiItemList.size(); j++) {
                     String categoryCode = tourApiItemList.get(j).getCategoryCode();
@@ -229,22 +222,46 @@ public class ItemService {
                             itemRes.setCategoryCode
                                     (transCategoryCodeIntoCustomCategoryType(tourApiItem.getCategoryCode()));
                             itemRes.setSubCategoryCode(tourApiItem.getSubCategoryCode());
+                            itemRes.setCategoryOrder(k);
+                            itemRes.setAreaCode(tourApiItem.getAreaCode());
+                            itemRes.setSggCode(tourApiItem.getSggCode());
 
-                            tourApiItemListAfterApplyRatio.add(itemRes);
+                            tourApiItemListAfterApplyRatioTemp.add(itemRes);
                             pcList.get(k).setStackedNumber(pcList.get(k).getStackedNumber() + 1);
                             break;
                         }
                     }
                 }
 
+                Collections.sort(tourApiItemListAfterApplyRatioTemp);
+                tourApiItemListAfterApplyRatio.addAll(tourApiItemListAfterApplyRatioTemp);
+
                 System.out.println("\n------------------ (2) 좋아요 받지 못한 아이템 ------------------\n");
+                List<CustomCategoryType> customCategoryTypeList = new ArrayList<>();
+                List<Double> ratioList = new ArrayList<>();
+                int i = 0;
                 for (PersonalityCategoryRatioAndNumber p : pcList) {
                     System.out.println("Category : " + p.getCategoryCode() + "   " + p.getStackedNumber() + " / " +
                             p.getNumber());
+                    if(i > 3) continue;
+                    customCategoryTypeList.add(p.getCategoryCode());
+                    ratioList.add(Double.parseDouble(String.format("%.2f",p.getRatio())));
+                    i++;
                 }
 
                 List<ItemRes> itemResList = setLikesAndBookmarks(tourApiItemListAfterApplyRatio, userIdx);
-                return DefaultRes.res(StatusCode.OK, "아이템 전체 조회 성공", itemResList);
+                itemAllRes.setItemResList(itemResList);
+
+                List<CategoryAndRatio>categoryAndRatioList = new ArrayList<>();
+                for(int j = 0; j < 4; j++){
+                    CategoryAndRatio categoryAndRatio = new CategoryAndRatio();
+                    categoryAndRatio.setCustomCategoryType(customCategoryTypeList.get(j));
+                    categoryAndRatio.setRatio(ratioList.get(j));
+                    categoryAndRatioList.add(categoryAndRatio);
+                }
+                itemAllRes.setPopularCategoryList(categoryAndRatioList);
+
+                return DefaultRes.res(StatusCode.OK, "아이템 전체 조회 성공", itemAllRes);
             }
         } catch (Exception e) {
             log.error(e.getLocalizedMessage());
@@ -284,6 +301,9 @@ public class ItemService {
             itemRes.setImageUrl(tourApiItem.getImageUrl());
 
             itemRes.setCategoryCode(transCategoryCodeIntoCustomCategoryType(tourApiItem.getCategoryCode()));
+
+            itemRes.setAreaCode(tourApiItem.getAreaCode());
+            itemRes.setSggCode(tourApiItem.getSggCode());
 
             itemRes = setLikeAndBookmark(itemRes, userIdx);
 
@@ -409,6 +429,8 @@ public class ItemService {
             itemRes.setSubCategoryCode(tourApiItemList.get(i).getSubCategoryCode());
             itemRes.setLiked(false);
             itemRes.setBookmarked(false);
+            itemRes.setAreaCode(tourApiItemList.get(i).getAreaCode());
+            itemRes.setSggCode(tourApiItemList.get(i).getSggCode());
 
             if (likeList.isPresent()) {
                 for (int k = 0; k < likeList.get().size(); k++) {
@@ -445,6 +467,8 @@ public class ItemService {
         itemRes.setSubCategoryCode(tourApiItem.getSubCategoryCode());
         itemRes.setLiked(false);
         itemRes.setBookmarked(false);
+        itemRes.setAreaCode(tourApiItem.getAreaCode());
+        itemRes.setSggCode(tourApiItem.getSggCode());
 
         if (likeList.isPresent()) {
             for (int k = 0; k < likeList.get().size(); k++) {
@@ -467,4 +491,37 @@ public class ItemService {
         }
         return itemRes;
     }
+
+    private static Map<CustomCategoryType, ArrayList<String>> categoryCodeMap = new HashMap() {{
+        put(CustomCategoryType.NATURE, new ArrayList<>(
+                Arrays.asList("A0101", "A0102")
+        ));
+        put(CustomCategoryType.HISTORY, new ArrayList<>(
+                Arrays.asList("A0201")
+        ));
+        put(CustomCategoryType.REST, new ArrayList<>(
+                Arrays.asList("A0202")
+        ));
+        put(CustomCategoryType.EXPERIENCE, new ArrayList<>(
+                Arrays.asList("A0203")
+        ));
+        put(CustomCategoryType.INDUSTRY, new ArrayList<>(
+                Arrays.asList("A0204", "A0205")
+        ));
+        put(CustomCategoryType.CULTURE, new ArrayList<>(
+                Arrays.asList("A0206")
+        ));
+        put(CustomCategoryType.FESTIVAL, new ArrayList<>(
+                Arrays.asList("A0207", "A0208")
+        ));
+        put(CustomCategoryType.REPORTS, new ArrayList<>(
+                Arrays.asList("A0302", "A0303", "A0304", "A0305")
+        ));
+        put(CustomCategoryType.SHOPPING, new ArrayList<>(
+                Arrays.asList("A0401")
+        ));
+        put(CustomCategoryType.RESTAURANT, new ArrayList<>(
+                Arrays.asList("A0502")
+        ));
+    }};
 }

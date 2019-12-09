@@ -10,5 +10,7 @@ public class TourApiItem {
     private String categoryCode;
     private String subCategoryCode;
     private String imageUrl;
+    private int areaCode;
+    private int sggCode;
     private TourApiItemCommon tourApiItemCommon;
 }
