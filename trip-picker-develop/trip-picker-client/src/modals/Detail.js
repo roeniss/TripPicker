@@ -61,7 +61,7 @@ const Detail = ({ contentIdx, userIdx, closeModal }) => {
   };
 
   const getHomepageLinkTag = (link, text = "홈페이지 바로가기") => (
-    <a href={link || "http://54.180.29.122/"} target="_blank" rel="noopener noreferrer">
+    <a href={link || "http://13.124.55.214:3000/"} target="_blank" rel="noopener noreferrer">
       {text}
     </a>
   );
