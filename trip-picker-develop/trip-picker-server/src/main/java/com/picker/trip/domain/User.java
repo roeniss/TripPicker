@@ -5,7 +5,7 @@ import lombok.Data;
 import javax.persistence.*;
 
 /**
- * Created By yw on 2019-09-19.
+ * User Entity Class
  */
 
 @Data

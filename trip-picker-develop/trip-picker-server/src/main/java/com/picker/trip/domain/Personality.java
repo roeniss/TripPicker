@@ -7,6 +7,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * Personality Entity Class
+ */
 @Data
 @Entity
 @Table(name = "personality")
