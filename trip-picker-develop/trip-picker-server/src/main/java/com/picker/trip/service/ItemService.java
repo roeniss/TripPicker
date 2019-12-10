@@ -58,12 +58,9 @@ public class ItemService {
         try {
             int areaCode, sggCode;
 
-            if (isSelected && userLocationRepository.findByUserIdx(userIdx).isPresent()) {
+            if (userLocationRepository.findByUserIdx(userIdx).isPresent()) {
                 areaCode = userLocationRepository.findByUserIdx(userIdx).get().getAreaCode();
                 sggCode = userLocationRepository.findByUserIdx(userIdx).get().getSggCode();
-            } else if (!isSelected && userPreferenceRepository.findByUserIdx(userIdx).isPresent()) {
-                areaCode = userPreferenceRepository.findByUserIdx(userIdx).get().getAreaCode();
-                sggCode = userPreferenceRepository.findByUserIdx(userIdx).get().getSggCode();
             } else {
                 return DefaultRes.res(StatusCode.NOT_FOUND, "아이템을 찾을 수 없습니다.");
             }
@@ -124,10 +121,8 @@ public class ItemService {
                         personalityCategoryRatioAndNumberList.get();
                 Collections.sort(pcList);
 
-
                 List<UserPersonality> userPersonalityList =
                         userPersonalityRepository.findAllByPersonalityType(personalityType).get();
-
 
                 List<Integer> userIdxList = new ArrayList<>();
                 for (UserPersonality upl : userPersonalityList) {
@@ -194,6 +189,7 @@ public class ItemService {
 
                 List<TourApiItem> tourApiItemList =
                         tourApiService.findAllData(areaCode, sggCode);
+
 
                 List <ItemRes> tourApiItemListAfterApplyRatioTemp = new ArrayList<>();
 
@@ -278,12 +274,9 @@ public class ItemService {
         try {
             int areaCode, sggCode;
 
-            if (isSelected && userLocationRepository.findByUserIdx(userIdx).isPresent()) {
+            if (userLocationRepository.findByUserIdx(userIdx).isPresent()) {
                 areaCode = userLocationRepository.findByUserIdx(userIdx).get().getAreaCode();
                 sggCode = userLocationRepository.findByUserIdx(userIdx).get().getSggCode();
-            } else if (!isSelected && userPreferenceRepository.findByUserIdx(userIdx).isPresent()) {
-                areaCode = userPreferenceRepository.findByUserIdx(userIdx).get().getAreaCode();
-                sggCode = userPreferenceRepository.findByUserIdx(userIdx).get().getSggCode();
             } else {
                 return DefaultRes.res(StatusCode.NOT_FOUND, "아이템을 찾을 수 없습니다.");
             }
