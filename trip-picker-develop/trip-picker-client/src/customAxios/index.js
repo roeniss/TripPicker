@@ -110,11 +110,11 @@ const updateRegion = async (dispatch, data) => {
 };
 
 const recommendRegion = async (dispatch, data) => {
+  // 기능 확인 완료
   const { fullData, userIdx } = data;
-
   let response;
-  response = await Axios.post(getUrl("RECOMMEND_REGION"), fullData).catch(_ => (response = { predictions: 939010 }));
-  const { predictions } = response;
+  response = await Axios.post(getUrl("RECOMMEND_REGION"), fullData).catch(_ => (response = { data: { predictions: 939010 } }));
+  const { predictions } = response.data;
   const fullRegion = regionInfo[predictions]["fullRegion"];
   updateRegion(dispatch, { region: fullRegion, userIdx });
   // Below: TEST

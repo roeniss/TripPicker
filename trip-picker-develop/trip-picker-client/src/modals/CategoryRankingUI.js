@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
-import { DispatchContext, StateContext } from "../App";
+import { _DispatchContext, StateContext } from "../App";
 
 const modalElem = document.getElementById("rank-modal");
 const CategoryRankingUI = () => {
-  const dispatch = useContext(DispatchContext);
+  // const dispatch = useContext(DispatchContext);
   const state = useContext(StateContext);
 
   const getRank = () => {
